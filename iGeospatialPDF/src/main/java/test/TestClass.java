@@ -5,6 +5,8 @@
  */
 package test;
 
+import net.coobird.thumbnailator.Thumbnails;
+
 /**
  *
  * @author DaGri
