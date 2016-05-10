@@ -17,7 +17,7 @@ public class DrawPoint extends DrawElement {
 	// ATTRIBUTES
 
 	/**
-	 * TODO
+	 * The {@link Point2D} of this {@link DrawElement}.
 	 */
 	private Point2D point;
 
@@ -32,9 +32,22 @@ public class DrawPoint extends DrawElement {
 	 * @param point
 	 *            the {@link Point2D} to set
 	 */
+	@Deprecated
 	public DrawPoint(Icon icon, Point2D point) {
 		super();
 		// TODO : ICON GESONDERT BEHANDELN?
+		this.point = point;
+	}
+
+	/**
+	 * Constructor for a {@link DrawPoint} using a {@link Point2D} for the
+	 * geographic component.
+	 * 
+	 * @param point
+	 *            the {@link Point2D} to set
+	 */
+	public DrawPoint(Point2D point) {
+		super();
 		this.point = point;
 	}
 
@@ -43,16 +56,16 @@ public class DrawPoint extends DrawElement {
 	// GETTERS AND SETTERS
 
 	/**
-	 * Returns the TODO
+	 * Returns the {@link Point2D} of this {@link DrawPoint}.
 	 *
-	 * @return the point
+	 * @return the point as {@link DrawPoint}
 	 */
 	public Point2D getPoint() {
 		return point;
 	}
 
 	/**
-	 * Sets the TODO
+	 * Sets the {@link Point2D} of this {@link DrawPoint}.
 	 *
 	 * @param point
 	 *            the point to set

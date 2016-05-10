@@ -26,10 +26,14 @@ public class GeospatialDrawer extends Drawer {
 	// CONSTRUCTORS
 
 	/**
-	 * Constructor for TODO
+	 * Constructor for a {@link GeospatialDrawer} using a {@link PdfContentByte}
+	 * and a {@link PdfStructureElement} to draw tagged {@link DrawElement}s
+	 * directly into the structure of a PDF file.
 	 * 
 	 * @param contByte
+	 *            the {@link PdfContentByte} to use
 	 * @param top
+	 *            the {@link PdfStructureElement} to use
 	 */
 	public GeospatialDrawer(PdfContentByte contByte, PdfStructureElement top) {
 		super(contByte, top);

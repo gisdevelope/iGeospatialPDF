@@ -1,7 +1,12 @@
 package resources;
 
+import java.lang.reflect.Array;
+
+import mapContent.Map;
+
 /**
- * Class to TODO
+ * Class to contain an {@link Array} of {@link Tile}s that can be combined to a
+ * completed map image.
  * 
  * @author DaGri
  * @since 03.05.2016
@@ -13,7 +18,7 @@ public class TileArray {
 
 	/**
 	 * The array of {@link Tile}s used to store the {@link Tile}s that cover a
-	 * TODO (MAP).
+	 * {@link Map}.
 	 */
 	private Tile[][] tiles;
 
@@ -42,7 +47,6 @@ public class TileArray {
 	public TileArray(int columns, int rows) {
 		this.columns = columns;
 		this.rows = rows;
-		// TODO : STIMMEN ROWS UND TILES SO?
 		this.tiles = new Tile[rows][columns];
 	}
 
@@ -51,26 +55,31 @@ public class TileArray {
 	// GETTERS AND SETTERS
 
 	/**
-	 * Returns the TODO
+	 * Returns the {@link Tile} - {@link Array}, that contains the {@link Tile}
+	 * s, with n rows and m columns. The number of rows can be get by using the
+	 * getRows() : {@link Integer} - method. The columns can be get by the
+	 * getColumns() : {@link Integer} - method.
 	 *
-	 * @return the tiles
+	 * @return the {@link Tile} - {@link Array}
 	 */
 	public Tile[][] getTiles() {
 		return tiles;
 	}
 
 	/**
-	 * Sets the TODO
+	 * Sets the {@link Tile} - {@link Array}, that contains the {@link Tile} s,
+	 * with n rows and m columns.
 	 *
 	 * @param tiles
-	 *            the tiles to set
+	 *            the {@link Tile}s to set
 	 */
 	public void setTiles(Tile[][] tiles) {
 		this.tiles = tiles;
 	}
 
 	/**
-	 * Returns the TODO
+	 * Returns the count of columns of the {@link Tile} - {@link Array} as
+	 * {@link Integer}.
 	 *
 	 * @return the columns
 	 */
@@ -79,32 +88,13 @@ public class TileArray {
 	}
 
 	/**
-	 * Sets the TODO
-	 *
-	 * @param columns
-	 *            the columns to set
-	 */
-	public void setColumns(int columns) {
-		this.columns = columns;
-	}
-
-	/**
-	 * Returns the TODO
+	 * Returns the count of rows of the {@link Tile} - {@link Array} as
+	 * {@link Integer}.
 	 *
 	 * @return the rows
 	 */
 	public int getRows() {
 		return rows;
-	}
-
-	/**
-	 * Sets the TODO
-	 *
-	 * @param rows
-	 *            the rows to set
-	 */
-	public void setRows(int rows) {
-		this.rows = rows;
 	}
 
 	// OTHERS

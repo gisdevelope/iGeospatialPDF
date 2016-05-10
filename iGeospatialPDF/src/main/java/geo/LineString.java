@@ -13,7 +13,16 @@ public class LineString extends Geometry {
 
 	// ATTRIBUTES
 
+	/**
+	 * The {@link ArrayList} of {@link Point2D} used as base points for this
+	 * {@link LineString}.
+	 */
 	private ArrayList<Point2D> points = new ArrayList<>();
+
+	/**
+	 * The geographical length of this {@link LineString} as {@link Double}.
+	 */
+	private double geoLength = 0.0;
 
 	// CONSTRUCTORS
 
@@ -27,9 +36,17 @@ public class LineString extends Geometry {
 	public LineString(ArrayList<Point2D> points) {
 		super();
 		this.points = points;
+		this.calcGeoLength();
 	}
 
 	// METHODS
+
+	/**
+	 * Calculates the lenght of this {@link LineString}.
+	 */
+	private void calcGeoLength() {
+		this.setGeoLength(new GeoCalculator().calcLineStringLength(this));
+	}
 
 	// GETTERS AND SETTERS
 
@@ -50,6 +67,26 @@ public class LineString extends Geometry {
 	 */
 	public void setPoints(ArrayList<Point2D> points) {
 		this.points = points;
+		this.calcGeoLength();
+	}
+
+	/**
+	 * Returns the geographical length of this {@link LineString} in meters.
+	 *
+	 * @return the geoLength as {@link Double} in meters
+	 */
+	public double getGeoLength() {
+		return geoLength;
+	}
+
+	/**
+	 * Sets the geographical length of this {@link LineString}.
+	 *
+	 * @param geoLength
+	 *            the geoLength to set as {@link Double} in meters
+	 */
+	public void setGeoLength(double geoLength) {
+		this.geoLength = geoLength;
 	}
 
 	// OTHERS

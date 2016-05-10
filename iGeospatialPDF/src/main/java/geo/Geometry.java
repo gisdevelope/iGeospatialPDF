@@ -7,7 +7,7 @@ package geo;
  * @since 02.05.2016
  *
  */
-public class Geometry {
+public abstract class Geometry {
 
 	// ATTRIBUTES
 
@@ -39,8 +39,6 @@ public class Geometry {
 	public void setGeometryType(String geometryType) {
 		this.geometryType = geometryType;
 	}
-
-
 
 	// OTHERS
 }

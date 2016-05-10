@@ -17,9 +17,11 @@ public class WebServicePDF extends GeospatialPDF {
 	// CONSTRUCTORS
 
 	/**
-	 * Constructor for TODO
+	 * Constructor for a {@link WebServicePDF} using a {@link Rectangle} to
+	 * define the size of the page.
 	 * 
 	 * @param pageSize
+	 *            the size of the page as {@link Rectangle}
 	 */
 	public WebServicePDF(Rectangle pageSize) {
 		super(pageSize);

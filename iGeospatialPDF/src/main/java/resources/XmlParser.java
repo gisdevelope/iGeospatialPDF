@@ -1,11 +1,10 @@
 package resources;
 
 /**
- * Class to TODO
+ * Class to parse a XML source into different objects.
  * 
  * @author DaGri
  * @since 03.05.2016
- *
  */
 public class XmlParser {
 

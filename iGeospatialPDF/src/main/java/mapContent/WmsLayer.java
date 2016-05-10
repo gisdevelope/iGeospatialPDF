@@ -1,7 +1,8 @@
 package mapContent;
 
 /**
- * Class to TODO
+ * Class to represent a {@link WmsLayer} - a layer requested from a Web Map
+ * Service (WMS).
  * 
  * @author DaGri
  * @since 03.05.2016

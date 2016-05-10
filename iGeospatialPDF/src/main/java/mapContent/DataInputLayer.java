@@ -1,7 +1,8 @@
 package mapContent;
 
 /**
- * Class to TODO
+ * Class to represent a {@link DataInputLayer} - a layer that contains other
+ * objects. TODO : UPDATE DEFINITION
  * 
  * @author DaGri
  * @since 03.05.2016

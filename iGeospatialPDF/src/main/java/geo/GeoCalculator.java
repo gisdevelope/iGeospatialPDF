@@ -45,6 +45,21 @@ public class GeoCalculator {
 		return erg;
 	}
 
+	/**
+	 * Calculates the length of a {@link LineString} as {@link Double}.
+	 *
+	 * @param lineString
+	 *            the {@link LineString} to calculate the length of
+	 * @return length the length of the {@link LineString} as {@link Double}
+	 */
+	public double calcLineStringLength(LineString lineString) {
+		double erg = 0.0;
+		for (int a = 0; a < lineString.getPoints().size() - 1; a++) {
+			erg = erg + this.calcDistance(lineString.getPoints().get(a), lineString.getPoints().get(a + 1));
+		}
+		return erg;
+	}
+
 	// GETTERS AND SETTERS
 
 	// OTHERS
