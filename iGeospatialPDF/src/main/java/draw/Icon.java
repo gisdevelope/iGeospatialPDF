@@ -4,10 +4,10 @@ package draw;
  * Class to TODO
  * 
  * @author DaGri
- * @since 03.05.2016
+ * @since 09.05.2016
  *
  */
-public class DrawElement {
+public class Icon {
 
 	// ATTRIBUTES
 
