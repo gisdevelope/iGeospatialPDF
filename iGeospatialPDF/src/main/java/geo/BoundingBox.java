@@ -85,7 +85,7 @@ public class BoundingBox {
 				this.getDownLeft().getLon() + (this.getDownLeft().getLon() - this.getUpRight().getLon()) / 2,
 				this.getDownLeft().getCoordSystem()));
 		this.setHeightGeo(new GeoCalculator().calcDistance(downLeft, upLeft));
-		this.setHeightGeo(new GeoCalculator().calcDistance(downLeft, downRight));
+		this.setWidthGeo(new GeoCalculator().calcDistance(downLeft, downRight));
 	}
 
 	/**
@@ -144,6 +144,7 @@ public class BoundingBox {
 	 */
 	public void setUpRight(Point2D upRight) {
 		this.upRight = upRight;
+		this.calcOthers();
 	}
 
 	/**
@@ -161,8 +162,9 @@ public class BoundingBox {
 	 * @param upLeft
 	 *            the upLeft to set
 	 */
-	public void setUpLeft(Point2D upLeft) {
+	private void setUpLeft(Point2D upLeft) {
 		this.upLeft = upLeft;
+		this.calcOthers();
 	}
 
 	/**
@@ -180,7 +182,7 @@ public class BoundingBox {
 	 * @param downRight
 	 *            the downRight to set
 	 */
-	public void setDownRight(Point2D downRight) {
+	private void setDownRight(Point2D downRight) {
 		this.downRight = downRight;
 	}
 
@@ -199,7 +201,7 @@ public class BoundingBox {
 	 * @param center
 	 *            the center to set
 	 */
-	public void setCenter(Point2D center) {
+	private void setCenter(Point2D center) {
 		this.center = center;
 	}
 
@@ -218,7 +220,7 @@ public class BoundingBox {
 	 * @param widthGeo
 	 *            the widthGeo to set
 	 */
-	public void setWidthGeo(double widthGeo) {
+	private void setWidthGeo(double widthGeo) {
 		this.widthGeo = widthGeo;
 	}
 
@@ -237,7 +239,7 @@ public class BoundingBox {
 	 * @param heightGeo
 	 *            the heightGeo to set
 	 */
-	public void setHeightGeo(double heightGeo) {
+	private void setHeightGeo(double heightGeo) {
 		this.heightGeo = heightGeo;
 	}
 
