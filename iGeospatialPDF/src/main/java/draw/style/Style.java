@@ -1,4 +1,4 @@
-package draw;
+package draw.style;
 
 import geo.LineString;
 import geo.Point2D;
