@@ -3,6 +3,7 @@ package draw.geo;
 import draw.DrawElement;
 import draw.Icon;
 import geo.Point2D;
+import resources.PDFCoordinate;
 
 /**
  * Class to represent a PDF-printable {@link Point2D}. This class extends the
@@ -21,6 +22,11 @@ public class DrawPoint extends DrawElement {
 	 */
 	private Point2D point;
 
+	/**
+	 * 
+	 */
+	private PDFCoordinate pdfCoord;
+
 	// CONSTRUCTORS
 
 	/**
@@ -35,7 +41,7 @@ public class DrawPoint extends DrawElement {
 	@Deprecated
 	public DrawPoint(Icon icon, Point2D point) {
 		super();
-		// TODO : ICON GESONDERT BEHANDELN?
+		// TODO : ICON GESONDERT BEHANDELN ODER GELOEST UEBER DEN STYLE?
 		this.point = point;
 	}
 
@@ -72,6 +78,25 @@ public class DrawPoint extends DrawElement {
 	 */
 	public void setPoint(Point2D point) {
 		this.point = point;
+	}
+
+	/**
+	 * Returns the {@link PDFCoordinate} of this {@link DrawPoint}.
+	 *
+	 * @return the pdfCoord as {@link PDFCoordinate}
+	 */
+	public PDFCoordinate getPdfCoord() {
+		return pdfCoord;
+	}
+
+	/**
+	 * Sets the {@link PDFCoordinate} of this {@link DrawPoint}.
+	 *
+	 * @param pdfCoord
+	 *            the pdfCoord to set
+	 */
+	public void setPdfCoord(PDFCoordinate pdfCoord) {
+		this.pdfCoord = pdfCoord;
 	}
 
 	// OTHERS
