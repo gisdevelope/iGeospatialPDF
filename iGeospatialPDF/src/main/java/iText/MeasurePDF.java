@@ -25,6 +25,15 @@ public class MeasurePDF extends GeospatialPDF {
 		super(pageSize);
 	}
 
+	/* (non-Javadoc)
+	 * @see iText.GeospatialPDF#createPDF()
+	 */
+	@Override
+	public void createPDF() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	// METHODS
 
 	// GETTERS AND SETTERS

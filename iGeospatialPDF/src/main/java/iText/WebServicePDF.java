@@ -28,6 +28,15 @@ public class WebServicePDF extends GeospatialPDF {
 		// TODO Auto-generated constructor stub
 	}
 
+	/* (non-Javadoc)
+	 * @see iText.GeospatialPDF#createPDF()
+	 */
+	@Override
+	public void createPDF() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	// METHODS
 
 	// GETTERS AND SETTERS
