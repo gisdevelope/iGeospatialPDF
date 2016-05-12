@@ -60,6 +60,21 @@ public class GeoCalculator {
 		return erg;
 	}
 
+	/**
+	 * Calculates the length of a {@link Polygon} as {@link Double}.
+	 *
+	 * @param lineString
+	 *            the {@link Polygon} to calculate the length of
+	 * @return length the length of the {@link Polygon} as {@link Double}
+	 */
+	public double calcPolygonLength(Polygon polygon) {
+		double erg = 0.0;
+		for (int a = 0; a < polygon.getPoints().size() - 1; a++) {
+			erg = erg + this.calcDistance(polygon.getPoints().get(a), polygon.getPoints().get(a + 1));
+		}
+		return erg;
+	}
+
 	// GETTERS AND SETTERS
 
 	// OTHERS
