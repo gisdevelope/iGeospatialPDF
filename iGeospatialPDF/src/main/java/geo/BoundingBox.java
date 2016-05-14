@@ -1,5 +1,8 @@
 package geo;
 
+import coordinateSystems.CoordinateSystem;
+import resources.ServerVersion;
+
 /**
  * Class to specify a geographic area on the surface of the earth. A
  * {@link BoundingBox} is typically defined by the lower left corner and the
@@ -12,6 +15,11 @@ package geo;
 public class BoundingBox {
 
 	// ATTRIBUTES
+
+	/**
+	 * The {@link CoordinateSystem} of this {@link BoundingBox}.
+	 */
+	private CoordinateSystem system;
 
 	/**
 	 * The lower left corner of this {@link BoundingBox} as {@link Point2D}.
@@ -62,10 +70,11 @@ public class BoundingBox {
 	 * @param upRight
 	 *            the upper right corner as {@link Point2D}
 	 */
-	public BoundingBox(Point2D downLeft, Point2D upRight) {
+	public BoundingBox(Point2D downLeft, Point2D upRight, CoordinateSystem system) {
 		super();
 		this.downLeft = downLeft;
 		this.upRight = upRight;
+		this.setSystem(system);
 		this.calcOthers();
 	}
 
@@ -96,7 +105,8 @@ public class BoundingBox {
 	 *            the version to match
 	 * @return
 	 */
-	public String getCornersByVersion(String version) {
+	public String getCornersByVersion(ServerVersion version) {
+		// TODO : FILL METHOD
 		String erg = "";
 		if (null == null) {
 			return erg;
@@ -107,6 +117,25 @@ public class BoundingBox {
 	}
 
 	// GETTERS AND SETTERS
+
+	/**
+	 * Returns the {@link CoordinateSystem} of this {@link BoundingBox}.
+	 *
+	 * @return the system as {@link CoordinateSystem}
+	 */
+	public CoordinateSystem getSystem() {
+		return system;
+	}
+
+	/**
+	 * Sets the {@link CoordinateSystem} of this {@link BoundingBox}.
+	 *
+	 * @param system
+	 *            the system to set
+	 */
+	public void setSystem(CoordinateSystem system) {
+		this.system = system;
+	}
 
 	/**
 	 * Returns the lower left {@link Point2D} of this {@link BoundingBox}.
@@ -125,6 +154,7 @@ public class BoundingBox {
 	 */
 	public void setDownLeft(Point2D downLeft) {
 		this.downLeft = downLeft;
+		this.calcOthers();
 	}
 
 	/**
@@ -164,7 +194,6 @@ public class BoundingBox {
 	 */
 	private void setUpLeft(Point2D upLeft) {
 		this.upLeft = upLeft;
-		this.calcOthers();
 	}
 
 	/**
