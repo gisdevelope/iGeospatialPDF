@@ -12,21 +12,9 @@ import geo.Polygon;
  * @since 03.05.2016
  *
  */
-public class Style {
+public abstract class Style {
 
 	// ATTRIBUTES
-
-	// private Icon pointIcon;
-	// private Color pointFillColor;
-	// private Color pointStrokeColor;
-	// private Color lineStringColor;
-	// private Color polygonFillColor;
-	// private Color polygonStrokeColor;
-	// private boolean pointsFilled;
-	// private boolean polygonsFilled;
-
-	// TODO : DATENTYPEN DER LINIENSTÄRKEN & PUNKTGROESSE
-	// TODO : STANDARTWERTE FUER DIE EINZELNEN ATTRIBUTE FESTLEGEN
 
 	// CONSTRUCTORS
 
@@ -35,4 +23,5 @@ public class Style {
 	// GETTERS AND SETTERS
 
 	// OTHERS
+	
 }
