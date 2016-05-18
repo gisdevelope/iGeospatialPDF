@@ -108,9 +108,13 @@ public class BoundingBox {
 	public String getCornersByVersion(ServerVersion version) {
 		// TODO : FILL METHOD
 		String erg = "";
-		if (null == null) {
+		if (version.toString().equals(ServerVersion.v_1_1_0.toString())) {
+			erg = "" + this.getDownLeft().getLat() + "," + this.getDownLeft().getLon() + ","
+					+ this.getUpRight().getLat() + "," + this.getUpRight().getLon();
 			return erg;
-		} else if (null == null) {
+		} else if (version.toString().equals(ServerVersion.v_1_3_0.toString())) {
+			erg = "" + this.getDownLeft().getLat() + "," + this.getDownLeft().getLon() + ","
+					+ this.getUpRight().getLat() + "," + this.getUpRight().getLon();
 			return erg;
 		}
 		return null;
