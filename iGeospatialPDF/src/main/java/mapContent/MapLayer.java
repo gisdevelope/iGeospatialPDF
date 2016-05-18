@@ -1,5 +1,6 @@
 package mapContent;
 
+import draw.drawer.Drawer;
 import geo.BoundingBox;
 
 /**
@@ -18,9 +19,30 @@ public abstract class MapLayer {
 	 */
 	private BoundingBox bbox;
 
+	/**
+	 * The {@link Drawer} of this {@link MapLayer}. Shall be a explicit type of
+	 * {@link Drawer} for each kind of PDF.
+	 */
+	private Drawer drawer;
+
 	// CONSTRUCTORS
 
+	/**
+	 * Constructor for a {@link MapLayer} using a {@link BoundingBox}.
+	 * 
+	 * @param bbox
+	 *            the {@link BoundingBox} to use
+	 */
+	public MapLayer(BoundingBox bbox) {
+		this.setBbox(bbox);
+	}
+
 	// METHODS
+
+	/**
+	 * Method to receive the data of a {@link MapLayer}.
+	 */
+	public abstract void receive();
 
 	// GETTERS AND SETTERS
 
@@ -41,6 +63,25 @@ public abstract class MapLayer {
 	 */
 	public void setBbox(BoundingBox bbox) {
 		this.bbox = bbox;
+	}
+
+	/**
+	 * Returns the {@link Drawer} of this {@link MapLayer}.
+	 *
+	 * @return the drawer as {@link Drawer}
+	 */
+	public Drawer getDrawer() {
+		return drawer;
+	}
+
+	/**
+	 * Sets the {@link Drawer} of this {@link MapLayer}.
+	 *
+	 * @param drawer
+	 *            the drawer to set
+	 */
+	public void setDrawer(Drawer drawer) {
+		this.drawer = drawer;
 	}
 
 	// OTHERS
