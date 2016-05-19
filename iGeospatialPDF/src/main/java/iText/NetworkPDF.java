@@ -1,7 +1,10 @@
 package iText;
 
+import java.util.ArrayList;
+
 import com.lowagie.text.Rectangle;
 
+import mapContent.MapLayer;
 import network.NetworkElement;
 
 /**
@@ -22,6 +25,24 @@ public class NetworkPDF extends GeospatialPDF {
 	 */
 	public NetworkPDF(Rectangle pageSize) {
 		super(pageSize);
+	}
+
+	/* (non-Javadoc)
+	 * @see iText.GeospatialPDF#createPDF(java.util.ArrayList, com.lowagie.text.Rectangle)
+	 */
+	@Override
+	public void createPDF(ArrayList<MapLayer> layers, Rectangle pageSize) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see iText.GeospatialPDF#createPDF(com.lowagie.text.Rectangle)
+	 */
+	@Override
+	public void createPDF(Rectangle pageSize) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	/* (non-Javadoc)
