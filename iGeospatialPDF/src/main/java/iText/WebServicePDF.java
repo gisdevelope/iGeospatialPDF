@@ -1,6 +1,10 @@
 package iText;
 
+import java.util.ArrayList;
+
 import com.lowagie.text.Rectangle;
+
+import mapContent.MapLayer;
 
 /**
  * Class to create a PDF document that is filled by Web Map Services and Web
@@ -29,12 +33,35 @@ public class WebServicePDF extends GeospatialPDF {
 	}
 
 	/* (non-Javadoc)
+	 * @see iText.GeospatialPDF#createPDF(java.util.ArrayList, com.lowagie.text.Rectangle)
+	 */
+	@Override
+	public void createPDF(ArrayList<MapLayer> layers, Rectangle pageSize) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see iText.GeospatialPDF#createPDF(com.lowagie.text.Rectangle)
+	 */
+	@Override
+	public void createPDF(Rectangle pageSize) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
 	 * @see iText.GeospatialPDF#createPDF()
 	 */
 	@Override
 	public void createPDF() {
-		// TODO Auto-generated method stub
+		for(int a=0;a<this.getLayers().size();a++){
+			this.getLayers().get(a).receive();
+		}
 		
+		// PDF DOKUMENT ERSTELLEN
+		// VORBEREITEN DES SCHREIBENS IN DAS DOKUMENT
+		// DOKUMENT DIREKT MIT GETAGGTEM INHALT ERSTELLEN
 	}
 
 	// METHODS

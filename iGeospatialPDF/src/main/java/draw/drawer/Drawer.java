@@ -32,6 +32,14 @@ public abstract class Drawer {
 	// CONSTRUCTORS
 
 	/**
+	 * Empty constructor for a {@link Drawer}. Make sure to define the
+	 * {@link PdfContentByte} and the {@link PdfStructureElement} before using
+	 * the drawer.
+	 */
+	public Drawer() {
+	};
+
+	/**
 	 * Constructor for a {@link Drawer} that is using a {@link PdfContentByte}
 	 * and a {@link PdfStructureElement} to draw tagged content into a
 	 * {@link GeospatialPDF}.
