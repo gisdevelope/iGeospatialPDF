@@ -26,13 +26,25 @@ public class Tile {
 	 */
 	private BoundingBox bbox;
 
+	/**
+	 * The width of the {@link BufferedImage} of this {@link Tile}.
+	 */
+	private int imageWidth;
+
+	/**
+	 * The height of the {@link BufferedImage} of this {@link Tile}.
+	 */
+	private int imageHeight;
+
 	// CONSTRUCTORS
 
-	// METHODS
+	/**
+	 * Empty constructor for a {@link Tile}.
+	 */
+	public Tile() {
+	}
 
-	// TODO:RECEIVE-Methode
-	// TODO:SINNVOLLE KONSTRUKTOREN
-	// TODO:STRING SOLLTE GESPEICHERT WERDEN
+	// METHODS
 
 	// GETTERS AND SETTERS
 
@@ -72,6 +84,46 @@ public class Tile {
 	 */
 	public void setBbox(BoundingBox bbox) {
 		this.bbox = bbox;
+	}
+
+	/**
+	 * Returns the width of the {@link BufferedImage} of this {@link Tile} as
+	 * {@link Integer}.
+	 *
+	 * @return the imageWidth as {@link Integer}
+	 */
+	public int getImageWidth() {
+		return imageWidth;
+	}
+
+	/**
+	 * Sets the width of the {@link BufferedImage} of this {@link Tile}.
+	 *
+	 * @param imageWidth
+	 *            the imageWidth to set
+	 */
+	public void setImageWidth(int imageWidth) {
+		this.imageWidth = imageWidth;
+	}
+
+	/**
+	 * Returns the height of the {@link BufferedImage} of this {@link Tile} as
+	 * {@link Integer}.
+	 *
+	 * @return the imageHeight as {@link Integer}
+	 */
+	public int getImageHeight() {
+		return imageHeight;
+	}
+
+	/**
+	 * Sets the height of the {@link BufferedImage} of this {@link Tile}.
+	 *
+	 * @param imageHeight
+	 *            the imageHeight to set
+	 */
+	public void setImageHeight(int imageHeight) {
+		this.imageHeight = imageHeight;
 	}
 
 	// OTHERS
