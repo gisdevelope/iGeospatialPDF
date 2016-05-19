@@ -19,14 +19,21 @@ import iText.GeospatialPDF;
  * @author DaGri
  * @since 09.05.2016
  */
-public class GeospatialDrawer extends Drawer {
+public class WebServiceDrawer extends Drawer {
 
 	// ATTRIBUTES
 
 	// CONSTRUCTORS
+	
+	/**
+	 * Constructor for TODO
+	 */
+	public WebServiceDrawer(){
+		super();
+	}
 
 	/**
-	 * Constructor for a {@link GeospatialDrawer} using a {@link PdfContentByte}
+	 * Constructor for a {@link WebServiceDrawer} using a {@link PdfContentByte}
 	 * and a {@link PdfStructureElement} to draw tagged {@link DrawElement}s
 	 * directly into the structure of a PDF file.
 	 * 
@@ -35,7 +42,7 @@ public class GeospatialDrawer extends Drawer {
 	 * @param top
 	 *            the {@link PdfStructureElement} to use
 	 */
-	public GeospatialDrawer(PdfContentByte contByte, PdfStructureElement top) {
+	public WebServiceDrawer(PdfContentByte contByte, PdfStructureElement top) {
 		super(contByte, top);
 		// TODO Auto-generated constructor stub
 	}
