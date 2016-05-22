@@ -39,8 +39,8 @@ public class GeoCalculator {
 		// EPSG 25832
 		if (p1.getCoordSystem().getClass() == EPSG25832.class) {
 			// PYTHAGORAS
-			erg = Math.sqrt((p1.getLat() - p2.getLat()) * (p1.getLat() - p2.getLat())
-					+ (p1.getLon() - p2.getLon()) * (p1.getLon() - p2.getLon()));
+			erg = Math.sqrt((p1.getNorthing() - p2.getNorthing()) * (p1.getNorthing() - p2.getNorthing())
+					+ (p1.getEasting() - p2.getEasting()) * (p1.getEasting() - p2.getEasting()));
 		}
 		return erg;
 	}

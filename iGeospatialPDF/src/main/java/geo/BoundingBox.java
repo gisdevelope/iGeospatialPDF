@@ -85,13 +85,13 @@ public class BoundingBox {
 	 * {@link BoundingBox}.
 	 */
 	private void calcOthers() {
-		this.setUpLeft(new Point2D(this.getUpRight().getLat(), this.getDownLeft().getLon(),
+		this.setUpLeft(new Point2D(this.getUpRight().getNorthing(), this.getDownLeft().getEasting(),
 				this.getDownLeft().getCoordSystem()));
-		this.setDownRight(new Point2D(this.getDownLeft().getLat(), this.getUpRight().getLon(),
+		this.setDownRight(new Point2D(this.getDownLeft().getNorthing(), this.getUpRight().getEasting(),
 				this.getDownLeft().getCoordSystem()));
 		this.setCenter(new Point2D(
-				this.getDownLeft().getLat() + (this.getDownLeft().getLat() - this.getUpRight().getLat()) / 2,
-				this.getDownLeft().getLon() + (this.getDownLeft().getLon() - this.getUpRight().getLon()) / 2,
+				this.getDownLeft().getNorthing() + (this.getDownLeft().getNorthing() - this.getUpRight().getNorthing()) / 2,
+				this.getDownLeft().getEasting() + (this.getDownLeft().getEasting() - this.getUpRight().getEasting()) / 2,
 				this.getDownLeft().getCoordSystem()));
 		this.setHeightGeo(new GeoCalculator().calcDistance(downLeft, upLeft));
 		this.setWidthGeo(new GeoCalculator().calcDistance(downLeft, downRight));
@@ -106,18 +106,77 @@ public class BoundingBox {
 	 * @return
 	 */
 	public String getCornersByVersion(ServerVersion version) {
-		// TODO : FILL METHOD
 		String erg = "";
 		if (version.toString().equals(ServerVersion.v_1_1_0.toString())) {
-			erg = "" + this.getDownLeft().getLat() + "," + this.getDownLeft().getLon() + ","
-					+ this.getUpRight().getLat() + "," + this.getUpRight().getLon();
+			erg = "" + this.getDownLeft().getEasting() + "," + this.getDownLeft().getNorthing() + ","
+					+ this.getUpRight().getEasting() + "," + this.getUpRight().getNorthing();
 			return erg;
 		} else if (version.toString().equals(ServerVersion.v_1_3_0.toString())) {
-			erg = "" + this.getDownLeft().getLat() + "," + this.getDownLeft().getLon() + ","
-					+ this.getUpRight().getLat() + "," + this.getUpRight().getLon();
+			erg = "" + this.getDownLeft().getEasting() + "," + this.getDownLeft().getNorthing() + ","
+					+ this.getUpRight().getEasting() + "," + this.getUpRight().getNorthing();
 			return erg;
 		}
 		return null;
+	}
+
+	/**
+	 * Returns a {@link BoundingBox} that lies adjacent to this
+	 * {@link BoundingBox} on the right. The returned {@link BoundingBox} has
+	 * the same height and the given width (in meters).
+	 *
+	 * @param width the width of the new {@link BoundingBox}
+	 * @return bbox the adjacent {@link BoundingBox}
+	 */
+	public BoundingBox getBBoxRight(double width) {
+		Point2D dl = this.getDownRight();
+		Point2D ur = new Point2D(this.getUpRight().getNorthing(), this.getUpRight().getEasting() + width, this.getSystem());
+		BoundingBox erg = new BoundingBox(dl, ur, this.getSystem());
+		return erg;
+	}
+
+	/**
+	 * Returns a {@link BoundingBox} that lies adjacent to this
+	 * {@link BoundingBox} on the left. The returned {@link BoundingBox} has
+	 * the same height and the given width (in meters).
+	 *
+	 * @param width the width of the new {@link BoundingBox}
+	 * @return bbox the adjacent {@link BoundingBox}
+	 */
+	public BoundingBox getBBoxLeft(double width) {
+		Point2D dl = new Point2D(this.getDownLeft().getNorthing(), this.getDownLeft().getEasting() - width, this.getSystem());
+		Point2D ur = this.getUpLeft();
+		BoundingBox erg = new BoundingBox(dl, ur, this.getSystem());
+		return erg;
+	}
+
+	/**
+	 * Returns a {@link BoundingBox} that lies adjacent above this
+	 * {@link BoundingBox}. The returned {@link BoundingBox} has
+	 * the same width and the given height (in meters).
+	 *
+	 * @param height the height of the new {@link BoundingBox}
+	 * @return bbox the adjacent {@link BoundingBox}
+	 */
+	public BoundingBox getBBoxAbove(double height) {
+		Point2D dl = this.getUpLeft();
+		Point2D ur = new Point2D(this.getUpRight().getNorthing() + height, this.getUpRight().getEasting(), this.getSystem());
+		BoundingBox erg = new BoundingBox(dl, ur, this.getSystem());
+		return erg;
+	}
+
+	/**
+	 * Returns a {@link BoundingBox} that lies adjacent below this
+	 * {@link BoundingBox}. The returned {@link BoundingBox} has
+	 * the same width and the given height (in meters).
+	 *
+	 * @param height the height of the new {@link BoundingBox}
+	 * @return bbox the adjacent {@link BoundingBox}
+	 */
+	public BoundingBox getBBoxBelow(double height) {
+		Point2D dl = new Point2D(this.getDownLeft().getNorthing() - height, this.getDownLeft().getEasting(), this.getSystem());
+		Point2D ur = this.getDownRight();
+		BoundingBox erg = new BoundingBox(dl, ur, this.getSystem());
+		return erg;
 	}
 
 	// GETTERS AND SETTERS

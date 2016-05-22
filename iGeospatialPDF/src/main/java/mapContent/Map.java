@@ -71,16 +71,16 @@ public class Map {
 		// FUER JEDEN MAPLAYER DER VORHANDEN IST
 		for (int a = 0; a < this.getLayers().size(); a++) {
 			// UNTERE LINKE ECKE WEITER LINKS ODER WEITER UNTEN?
-			if (this.getLayers().get(a).getBbox().getDownLeft().getLon() < this.getOverAllBBox().getDownLeft().getLon()
-					|| this.getLayers().get(a).getBbox().getDownLeft().getLat() < this.getOverAllBBox().getDownLeft()
-							.getLat()) {
+			if (this.getLayers().get(a).getBbox().getDownLeft().getEasting() < this.getOverAllBBox().getDownLeft().getEasting()
+					|| this.getLayers().get(a).getBbox().getDownLeft().getNorthing() < this.getOverAllBBox().getDownLeft()
+							.getNorthing()) {
 				// BOUNDINGBOX AUF DEN NEUEN LINKEN UNTEREN PUNKT ERWEITERN
 				this.getOverAllBBox().setDownLeft(this.getLayers().get(a).getBbox().getDownLeft());
 			}
 			// OBERE RECHTE ECKE WEITER RECHTS ODER WEITER OBEN?
-			if (this.getLayers().get(a).getBbox().getUpRight().getLon() > this.getOverAllBBox().getUpRight().getLon()
-					|| this.getLayers().get(a).getBbox().getUpRight().getLat() > this.getOverAllBBox().getUpRight()
-							.getLat()) {
+			if (this.getLayers().get(a).getBbox().getUpRight().getEasting() > this.getOverAllBBox().getUpRight().getEasting()
+					|| this.getLayers().get(a).getBbox().getUpRight().getNorthing() > this.getOverAllBBox().getUpRight()
+							.getNorthing()) {
 				// BOUNDINGBOX AUF DEN NEUEN RECHTEN OBEREN PUNKT ERWEITERN
 				this.getOverAllBBox().setUpRight(this.getLayers().get(a).getBbox().getUpRight());
 			}

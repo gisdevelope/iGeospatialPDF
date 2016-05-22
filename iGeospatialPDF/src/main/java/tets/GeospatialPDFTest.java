@@ -32,10 +32,10 @@ public class GeospatialPDFTest {
 
 		EPSG25832 epsg = new EPSG25832();
 
-		BoundingBox bbox = new BoundingBox(new Point2D(374676, 5712125, epsg),
-				new Point2D(374676 + 2300, 5712125 + 1000, epsg), epsg);
+		BoundingBox bbox = new BoundingBox(new Point2D(5712125, 374676, epsg),
+				new Point2D(5712125 + 500, 374676 + 500, epsg), epsg);
 //		BoundingBox bbox = new BoundingBox(new Point2D(1000, 1000, epsg),
-//				new Point2D(1000 + 1000, 1000 + 1000, epsg), epsg);
+//				new Point2D(1000 + 500, 1000 + 500, epsg), epsg);
 
 		ArrayList<String> layer = new ArrayList<String>();
 		layer.add("nw_dtk10_col");

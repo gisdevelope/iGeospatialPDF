@@ -15,15 +15,15 @@ public class Point2D extends Geometry {
 	// ATTRIBUTES
 
 	/**
-	 * The latitude (geographic X, mathematics Y) value of this {@link Point2D}.
+	 * The northing (geographic X, mathematics Y) value of this {@link Point2D}.
 	 */
-	private double lat;
+	private double northing;
 
 	/**
-	 * The longitude (geographic Y, mathematics X) value of this {@link Point2D}
+	 * The easting (geographic Y, mathematics X) value of this {@link Point2D}
 	 * .
 	 */
-	private double lon;
+	private double easting;
 
 	/**
 	 * The {@link CoordinateSystem} used by this {@link Point2D}.
@@ -37,15 +37,15 @@ public class Point2D extends Geometry {
 	 * Constructor for a {@link Point2D} using double values for the X- and
 	 * Y-component.
 	 * 
-	 * @param lat
-	 *            the latitude (geographic X, mathematics Y) value to set
-	 * @param lon
-	 *            the longitude (geographic Y, mathematics X) value to set
+	 * @param northing
+	 *            the northing (geographic X, mathematics Y) value to set
+	 * @param easting
+	 *            the easting (geographic Y, mathematics X) value to set
 	 */
-	public Point2D(double lat, double lon) {
+	public Point2D(double northing, double easting) {
 		super();
-		this.lat = lat;
-		this.lon = lon;
+		this.northing = northing;
+		this.easting = easting;
 		this.setGeometryType("Point2D");
 	}
 
@@ -53,17 +53,17 @@ public class Point2D extends Geometry {
 	 * Constructor for a {@link Point2D} using double values for the X- and
 	 * Y-component and a {@link CoordinateSystem} for the used system.
 	 * 
-	 * @param lat
-	 *            the latitude (geographic X, mathematics Y) value to set
-	 * @param lon
-	 *            the longitude (geographic Y, mathematics X) value to set
+	 * @param northing
+	 *            the northing (geographic X, mathematics Y) value to set
+	 * @param easting
+	 *            the easting (geographic Y, mathematics X) value to set
 	 * @param s
 	 *            the {@link CoordinateSystem} to set
 	 */
-	public Point2D(double lat, double lon, CoordinateSystem s) {
+	public Point2D(double northing, double easting, CoordinateSystem s) {
 		super();
-		this.lat = lat;
-		this.lon = lon;
+		this.northing = northing;
+		this.easting = easting;
 		this.coordSystem = s;
 		this.setGeometryType("Point2D");
 	}
@@ -73,45 +73,45 @@ public class Point2D extends Geometry {
 	// GETTERS AND SETTERS
 
 	/**
-	 * Returns the latitude (geographic X, mathematics Y) value of this
+	 * Returns the northing (geographic X, mathematics Y) value of this
 	 * {@link Point2D}.
 	 *
-	 * @return the lat
+	 * @return the northing
 	 */
-	public double getLat() {
-		return lat;
+	public double getNorthing() {
+		return northing;
 	}
 
 	/**
-	 * Sets the latitude (geographic X, mathematics Y) value of this
+	 * Sets the northing (geographic X, mathematics Y) value of this
 	 * {@link Point2D}.
 	 *
-	 * @param lat
-	 *            the latitude to set
+	 * @param northing
+	 *            the northing to set
 	 */
-	public void setLat(double lat) {
-		this.lat = lat;
+	public void setNorthing(double northing) {
+		this.northing = northing;
 	}
 
 	/**
-	 * Returns the longitude (geographic Y, mathematics X) value of this
+	 * Returns the easting (geographic Y, mathematics X) value of this
 	 * {@link Point2D}.
 	 *
-	 * @return the longitude
+	 * @return the easting
 	 */
-	public double getLon() {
-		return lon;
+	public double getEasting() {
+		return easting;
 	}
 
 	/**
-	 * Sets the longitude (geographic Y, mathematics X) value of this
+	 * Sets the easting (geographic Y, mathematics X) value of this
 	 * {@link Point2D}.
 	 *
-	 * @param lon
-	 *            the longitude to set
+	 * @param easting
+	 *            the easting to set
 	 */
-	public void setLon(double lon) {
-		this.lon = lon;
+	public void setEasting(double easting) {
+		this.easting = easting;
 	}
 
 	/**
