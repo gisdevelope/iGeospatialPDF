@@ -1,5 +1,7 @@
 package mapContent;
 
+import java.util.logging.Logger;
+
 import draw.drawer.Drawer;
 import geo.BoundingBox;
 
@@ -24,6 +26,11 @@ public abstract class MapLayer {
 	 * {@link Drawer} for each kind of PDF.
 	 */
 	private Drawer drawer;
+	
+	/**
+	 * The {@link Logger} used to log.
+	 */
+	Logger LOG;
 
 	// CONSTRUCTORS
 

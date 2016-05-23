@@ -1,5 +1,7 @@
 package mapContent;
 
+import java.util.logging.Logger;
+
 import geo.BoundingBox;
 
 /**
@@ -22,6 +24,7 @@ public class WfsLayer extends MapLayer {
 	 */
 	public WfsLayer(BoundingBox bbox) {
 		super(bbox);
+		LOG = Logger.getLogger(this.getClass().getCanonicalName());
 		// TODO Auto-generated constructor stub
 	}
 

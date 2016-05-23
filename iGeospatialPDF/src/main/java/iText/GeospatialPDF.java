@@ -1,6 +1,7 @@
 package iText;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import com.lowagie.text.Rectangle;
 
@@ -41,6 +42,11 @@ public abstract class GeospatialPDF {
 	 * The name of the {@link GeospatialPDF} in the file system.
 	 */
 	private String pdfName = "output/" + System.currentTimeMillis() + ".pdf";
+
+	/**
+	 * The {@link Logger} used to log.
+	 */
+	Logger LOG;
 
 	// CONSTRUCTORS
 
@@ -95,7 +101,8 @@ public abstract class GeospatialPDF {
 	// METHODS
 
 	/**
-	 * Creates the {@link GeospatialPDF} document in the file system and fills it with the contained {@link MapLayer}.
+	 * Creates the {@link GeospatialPDF} document in the file system and fills
+	 * it with the contained {@link MapLayer}.
 	 */
 	public abstract void createPDF();
 
