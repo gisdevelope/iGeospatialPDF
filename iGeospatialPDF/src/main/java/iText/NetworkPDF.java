@@ -1,11 +1,7 @@
 package iText;
 
-import java.util.ArrayList;
-
-import com.lowagie.text.Rectangle;
-
-import mapContent.MapLayer;
 import network.NetworkElement;
+import resources.PdfPageSize;
 
 /**
  * Class to create a {@link NetworkPDF} that can be used to display various
@@ -17,48 +13,32 @@ import network.NetworkElement;
  */
 public class NetworkPDF extends GeospatialPDF {
 
+	// ATTRIBUTES
+
+	// CONSTRUCTORS
+
 	/**
-	 * Constructor for a {@link NetworkPDF}.
+	 * Constructor for a {@link NetworkPDF} using a {@link PdfPageSize} to set the size of the page.
 	 * 
 	 * @param pageSize
-	 *            the page size to set as {@link Rectangle}
 	 */
-	public NetworkPDF(Rectangle pageSize) {
+	public NetworkPDF(PdfPageSize pageSize) {
 		super(pageSize);
+		// TODO Auto-generated constructor stub
 	}
 
-	/* (non-Javadoc)
-	 * @see iText.GeospatialPDF#createPDF(java.util.ArrayList, com.lowagie.text.Rectangle)
-	 */
-	@Override
-	public void createPDF(ArrayList<MapLayer> layers, Rectangle pageSize) {
-		// TODO Auto-generated method stub
-		
-	}
+	// METHODS
 
-	/* (non-Javadoc)
-	 * @see iText.GeospatialPDF#createPDF(com.lowagie.text.Rectangle)
-	 */
-	@Override
-	public void createPDF(Rectangle pageSize) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see iText.GeospatialPDF#createPDF()
 	 */
 	@Override
 	public void createPDF() {
 		// TODO Auto-generated method stub
-		
+
 	}
-
-	// ATTRIBUTES
-
-	// CONSTRUCTORS
-
-	// METHODS
 
 	// GETTERS AND SETTERS
 

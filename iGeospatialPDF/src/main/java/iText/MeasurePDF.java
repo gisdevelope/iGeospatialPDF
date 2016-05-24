@@ -1,10 +1,8 @@
 package iText;
 
-import java.util.ArrayList;
+import com.lowagie.text.pdf.PdfPages;
 
-import com.lowagie.text.Rectangle;
-
-import mapContent.MapLayer;
+import resources.PdfPageSize;
 
 /**
  * Class to create a {@link MeasurePDF} that can be used to display various
@@ -21,42 +19,29 @@ public class MeasurePDF extends GeospatialPDF {
 	// CONSTRUCTORS
 
 	/**
-	 * Constructor for a {@link MeasurePDF}.
+	 * Constructor for a {@link MeasurePDF} using a {@link PdfPageSize} to set
+	 * the size of the page.
 	 * 
 	 * @param pageSize
+	 *            the {@link PdfPageSize} to use
 	 */
-	public MeasurePDF(Rectangle pageSize) {
+	public MeasurePDF(PdfPageSize pageSize) {
 		super(pageSize);
+		// TODO Auto-generated constructor stub
 	}
 
-	/* (non-Javadoc)
-	 * @see iText.GeospatialPDF#createPDF(java.util.ArrayList, com.lowagie.text.Rectangle)
-	 */
-	@Override
-	public void createPDF(ArrayList<MapLayer> layers, Rectangle pageSize) {
-		// TODO Auto-generated method stub
-		
-	}
+	// METHODS
 
-	/* (non-Javadoc)
-	 * @see iText.GeospatialPDF#createPDF(com.lowagie.text.Rectangle)
-	 */
-	@Override
-	public void createPDF(Rectangle pageSize) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see iText.GeospatialPDF#createPDF()
 	 */
 	@Override
 	public void createPDF() {
 		// TODO Auto-generated method stub
-		
-	}
 
-	// METHODS
+	}
 
 	// GETTERS AND SETTERS
 
