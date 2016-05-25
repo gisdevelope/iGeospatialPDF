@@ -12,11 +12,10 @@ import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
-import com.lowagie.text.Rectangle;
-
 import draw.drawer.WebServiceDrawer;
 import geo.BoundingBox;
 import geo.Point2D;
+import iText.GeospatialPDF;
 import resources.ServerVersion;
 import resources.Tile;
 import resources.TileArray;
@@ -84,27 +83,33 @@ public class WmsLayer extends MapLayer {
 	// CONSTRUCTORS
 
 	/**
-	 * Constructor for a {@link WmsLayer} using various inputs to create the map
-	 * image.
+	 * Constructor for a {@link WmsLayer} using various inputs for creating the
+	 * {@link WmsLayer}s {@link BufferedImage}.
 	 * 
 	 * @param bbox
-	 *            the {@link BoundingBox} to use
+	 *            the {@link BoundingBox}
 	 * @param link
-	 *            the link to the WMS
-	 * @param arrayList
+	 *            the link to the Web Map Server (WMS)
+	 * @param layers
+	 *            the {@link ArrayList} of layers as {@link String}s
 	 * @param version
-	 *            the version of the WMS
+	 *            the server version to request as {@link ServerVersion}
 	 * @param dpi
-	 *            the desired dots per inch value of the image
+	 *            the desired Dots Per Inch of the map image
 	 * @param opacity
-	 *            the desired opacity of the image
-	 * @param rectangle
-	 *            the page size to fit as {@link Rectangle}
+	 *            the opacity of the map image
+	 * @param pageWidth
+	 *            the width of the {@link GeospatialPDF} the layer shall be
+	 *            displayed in
+	 * @param pageHeight
+	 *            the height of the {@link GeospatialPDF} the layer shall be
+	 *            displayed in
 	 */
 	public WmsLayer(BoundingBox bbox, String link, ArrayList<String> layers, ServerVersion version, int dpi,
-			int opacity, Rectangle rectangle) {
+			int opacity, float pageWidth, float pageHeight) {
 		super(bbox);
 		LOG = Logger.getLogger(this.getClass().getCanonicalName());
+		LOG.setLevel(Level.SEVERE);
 		// SET THE DRAWER FOR THIS WMSLAYER: A WEBSERVICEDRAWER
 		this.setDrawer(new WebServiceDrawer());
 		this.setLink(link);
@@ -116,10 +121,38 @@ public class WmsLayer extends MapLayer {
 		if (opacity > 100)
 			opacity = 100;
 		this.setOpacity(opacity);
-		// RECTANGLE CONTAINS FLOAT VALUES, BUT A IMAGE ONLY HAS EVEN SIDES SO
-		// CONVERT IT INTO INTEGER VALUES
-		this.setImageWidth((int) (rectangle.getWidth() * dpi));
-		this.setImageHeight((int) (rectangle.getWidth() * dpi));
+
+		// BOUNDINGBOX WIDTH IS LARGER THAN THE HEIGHT
+		if (this.getBbox().getWidthGeo() >= this.getBbox().getHeightGeo()) {
+			// SET THE DESIRED WIDTH OF THE IMAGE
+			this.setImageWidth((int) (pageWidth * dpi));
+			// SET THE DESIRED HEIGHT BY THE RELATION OF THE BOUNDGINGBOX WIDTH
+			// AND HEIGHT
+			double relation = this.getBbox().getHeightGeo() / this.getBbox().getWidthGeo();
+			this.setImageHeight((int) (this.getImageWidth() * relation));
+		} else
+		// ELSE THE BOUNDINGBOX HEIGHT IS LARGER THAN THE WIDTH
+		{
+			// SET THE DESIRED HEIGHT OF THE IMAGE
+			this.setImageHeight((int) (pageHeight * dpi));
+			// SET THE DESIRED HEIGHT BY THE RELATION OF THE BOUNDGINGBOX WIDTH
+			// AND HEIGHT
+			double relation = this.getBbox().getWidthGeo() / this.getBbox().getHeightGeo();
+			this.setImageWidth((int) (this.getImageHeight() * relation));
+			System.out.println("");
+		}
+		// ELSE THE BOUNDINGBOX IS EQUAL IN LENGTH AND HEIGHT : FIRST IF WILL DO
+
+		// FIX:
+		// IST MEINE BOUNDINGBOX BREITER ALS LANG NEHME ICH DIE X KANTE DER
+		// SEITE, BERECHNE DARAN DIE BILDBREITE UND DANN AUS DER BOUNDINGBOX
+		// (DEREN VERHAELTNIS) DIE HOEHE DES BILDES.
+		// SONST IST MEINE BOUNDINGBOX LAENGER ALS BREIT NEHME ICH DIE Y KANTE
+		// DER SEITE, BERECHNE DARAN DIE BILDHOEHE UND DANN AUS DER BOUNDINGBOX
+		// (DEREN VERAEHLTNIS) DIE BREITE DES BILDES.
+		// SONST IST MEINE BOUNDINGBOX QUADRATISCH TRITT AUTOMATISCH DER ERSTE
+		// FALL IN KRAFT
+
 		this.setLayers(layers);
 	}
 
@@ -143,14 +176,15 @@ public class WmsLayer extends MapLayer {
 
 	/**
 	 * Saves an image to the file system.
-	 *
-	 * @param string
+	 * 
+	 * @param buff
+	 *            the {@link BufferedImage} to save to the file system
 	 */
 	@SuppressWarnings("unused")
-	private void putOutImage(String path) {
+	private void putOutImage(BufferedImage buff) {
 		try {
 			File outputfile = new File("output/" + System.currentTimeMillis() + ".png");
-			ImageIO.write(this.getMapImage(), "png", outputfile);
+			ImageIO.write(buff, "png", outputfile);
 		} catch (IOException e) {
 			LOG.severe("COULD NOT PUT OUT IMAGE TO THE FILE SYSTEM!");
 		}
@@ -217,7 +251,6 @@ public class WmsLayer extends MapLayer {
 	 * that already contain their images.
 	 */
 	private void fillTileArray() {
-		LOG.setLevel(Level.SEVERE);
 		// MAXIMUM RECEIVING SIZE PER TILE SHALL BE 1000 X 1000 PIXELS
 		int tileArrayWidth = (int) (this.getImageWidth() / 1000.0);
 		int tileArrayHeight = (int) (this.getImageHeight() / 1000.0);
@@ -250,11 +283,12 @@ public class WmsLayer extends MapLayer {
 		// FULL TILES WITH 1000 PIXELS IN THE DIRECTION AND A TILE
 		// WITH ONLY 0.8 PERCENT TILE IN THE DIRECTION ARE NEEDED)
 		double widthValue = this.getImageWidth() / 1000.0;
-		double heightValue = this.getImageWidth() / 1000.0;
+		double heightValue = this.getImageHeight() / 1000.0;
 
 		// THE METER VALUES FOR A FULL 1000 X 1000 PIXEL TILE
-		double geoWidthValuePerStep = this.getBbox().getWidthGeo() / widthValue;
-		double geoHeightValuePerStep = this.getBbox().getHeightGeo() / heightValue;
+		double geoValuePerStep = this.getBbox().getWidthGeo() / widthValue;
+		// double geoHeightValuePerStep = this.getBbox().getHeightGeo() /
+		// heightValue;
 
 		// THE METER VALUES FOR THE ACTUAL STEP
 		double actGeoWidthStep = 0;
@@ -276,12 +310,14 @@ public class WmsLayer extends MapLayer {
 		if (heightValue >= 1) {
 			LOG.info("NOT YET AT THE RIGHT EDGE");
 			// A FULL TILE IN LATITUDE DIRECTION NEEDS TO BE REQUESTED
-			actGeoHeightStep = geoHeightValuePerStep * 1;
+			// actGeoHeightStep = geoHeightValuePerStep * 1;
+			actGeoHeightStep = geoValuePerStep * 1;
 			heightValue--;
 		} else if (heightValue < 1 && heightValue >= 0) {
 			// ONLY A PART OF THE TILE NEEDS TO BE REQUESTED
 			LOG.info("REACHED THE RIGHT END");
-			actGeoHeightStep = geoHeightValuePerStep * heightValue;
+			// actGeoHeightStep = geoHeightValuePerStep * heightValue;
+			actGeoHeightStep = geoValuePerStep * heightValue;
 			heightValue = 0;
 		}
 
@@ -291,12 +327,12 @@ public class WmsLayer extends MapLayer {
 		if (widthValue >= 1) {
 			// A COMPLETE TILE IN LON DIRECTION NEEDS TO BE
 			// REQUESTED
-			actGeoWidthStep = geoWidthValuePerStep * 1;
+			actGeoWidthStep = geoValuePerStep * 1;
 			widthValue--;
 		} else if (widthValue < 1 && widthValue >= 0) {
 			// REACHED THE RIGHT END OF THE IMAGE : ONLY THE METERS
 			// STILL LEFT NEED TO BE REQUESTED
-			actGeoWidthStep = geoWidthValuePerStep * widthValue;
+			actGeoWidthStep = geoValuePerStep * widthValue;
 			widthValue = 0;
 		}
 
@@ -304,11 +340,12 @@ public class WmsLayer extends MapLayer {
 				new Point2D(actNorthing + actGeoHeightStep, actEastring + actGeoWidthStep, this.getBbox().getSystem()),
 				this.getBbox().getSystem());
 
-		for (int a = 0; a < tileArrayHeight; a++) {
+		for (int h = 0; h < tileArrayHeight; h++) {
 
 			BoundingBox actBbox = leftStartBox;
+			System.out.println("START BOX GEO HEIGHT:" + actBbox.getHeightGeo());
 
-			for (int b = 0; b < tileArrayWidth; b++) {
+			for (int w = 0; w < tileArrayWidth; w++) {
 				// CREATE NEW TILE
 				Tile t = new Tile();
 
@@ -349,18 +386,18 @@ public class WmsLayer extends MapLayer {
 				LOG.info("IMAGE RECEIVED!");
 
 				// PUT THE TILE INSIDE THE ARRAY
-				this.getTileArray().getTiles()[b][a] = t;
+				this.getTileArray().getTiles()[w][h] = t;
 
 				// CALCULATE THE GEOGRAPHICAL STEP WIDTH IN TILE-PERCENTS
 				if (widthValue >= 1) {
 					// A COMPLETE TILE IN LON DIRECTION NEEDS TO BE
 					// REQUESTED
-					actGeoWidthStep = geoWidthValuePerStep * 1;
+					actGeoWidthStep = geoValuePerStep * 1;
 					widthValue--;
 				} else if (widthValue < 1 && widthValue >= 0) {
 					// REACHED THE RIGHT END OF THE IMAGE : ONLY THE METERS
 					// STILL LEFT NEED TO BE REQUESTED
-					actGeoWidthStep = geoWidthValuePerStep * widthValue;
+					actGeoWidthStep = geoValuePerStep * widthValue;
 					widthValue = 0;
 				}
 				actBbox = actBbox.getBBoxRight(actGeoWidthStep);
@@ -372,12 +409,12 @@ public class WmsLayer extends MapLayer {
 			if (widthValue >= 1) {
 				// A COMPLETE TILE IN LON DIRECTION NEEDS TO BE
 				// REQUESTED
-				actGeoWidthStep = geoWidthValuePerStep * 1;
+				actGeoWidthStep = geoValuePerStep * 1;
 				widthValue--;
 			} else if (widthValue < 1 && widthValue >= 0) {
 				// REACHED THE RIGHT END OF THE IMAGE : ONLY THE METERS
 				// STILL LEFT NEED TO BE REQUESTED
-				actGeoWidthStep = geoWidthValuePerStep * widthValue;
+				actGeoWidthStep = geoValuePerStep * widthValue;
 				widthValue = 0;
 			}
 
@@ -394,17 +431,18 @@ public class WmsLayer extends MapLayer {
 			if (heightValue >= 1) {
 				LOG.info("NOT YET AT THE RIGHT EDGE");
 				// A FULL TILE IN LATITUDE DIRECTION NEEDS TO BE REQUESTED
-				actGeoHeightStep = geoHeightValuePerStep * 1;
+				// actGeoHeightStep = geoHeightValuePerStep * 1;
+				actGeoHeightStep = geoValuePerStep * 1;
 				heightValue--;
-			} else if (heightValue < 1 && heightValue >= 0) {
+			} else if (heightValue < 1 && heightValue > 0) {
 				// ONLY A PART OF THE TILE NEEDS TO BE REQUESTED
 				LOG.info("REACHED THE RIGHT END");
-				actGeoHeightStep = geoHeightValuePerStep * heightValue;
+				// actGeoHeightStep = geoHeightValuePerStep * heightValue;
+				actGeoHeightStep = geoValuePerStep * heightValue;
 				heightValue = 0;
 			}
 			leftStartBox = leftStartBox.getBBoxBelow(actGeoHeightStep);
 		}
-		System.out.println("DEBUG");
 
 	}
 
@@ -460,6 +498,8 @@ public class WmsLayer extends MapLayer {
 
 			// CONVERT TO URL
 			URL url = new URL(urlContent);
+
+			System.out.println(urlContent + "");
 
 			// RECEIVE THE IMAGE FROM THE WMS SERVER
 			BufferedImage img = ImageIO.read(url);

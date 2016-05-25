@@ -18,7 +18,8 @@ public class TileArray {
 
 	/**
 	 * The array of {@link Tile}s used to store the {@link Tile}s that cover a
-	 * {@link Map}.
+	 * {@link Map}. The first array variable is the number of columns, the
+	 * second the number of rows.
 	 */
 	private Tile[][] tiles;
 
@@ -47,7 +48,7 @@ public class TileArray {
 	public TileArray(int columns, int rows) {
 		this.columns = columns;
 		this.rows = rows;
-		this.tiles = new Tile[rows][columns];
+		this.tiles = new Tile[columns][rows];
 	}
 
 	// METHODS
