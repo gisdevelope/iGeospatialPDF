@@ -139,19 +139,8 @@ public class WmsLayer extends MapLayer {
 			// AND HEIGHT
 			double relation = this.getBbox().getWidthGeo() / this.getBbox().getHeightGeo();
 			this.setImageWidth((int) (this.getImageHeight() * relation));
-			System.out.println("");
 		}
 		// ELSE THE BOUNDINGBOX IS EQUAL IN LENGTH AND HEIGHT : FIRST IF WILL DO
-
-		// FIX:
-		// IST MEINE BOUNDINGBOX BREITER ALS LANG NEHME ICH DIE X KANTE DER
-		// SEITE, BERECHNE DARAN DIE BILDBREITE UND DANN AUS DER BOUNDINGBOX
-		// (DEREN VERHAELTNIS) DIE HOEHE DES BILDES.
-		// SONST IST MEINE BOUNDINGBOX LAENGER ALS BREIT NEHME ICH DIE Y KANTE
-		// DER SEITE, BERECHNE DARAN DIE BILDHOEHE UND DANN AUS DER BOUNDINGBOX
-		// (DEREN VERAEHLTNIS) DIE BREITE DES BILDES.
-		// SONST IST MEINE BOUNDINGBOX QUADRATISCH TRITT AUTOMATISCH DER ERSTE
-		// FALL IN KRAFT
 
 		this.setLayers(layers);
 	}
@@ -215,7 +204,6 @@ public class WmsLayer extends MapLayer {
 		// CREATE IMAGE TO PUT THE TILE IMAGES INSIDE
 		BufferedImage ergImg = new BufferedImage(this.getImageWidth(), this.getImageHeight(),
 				BufferedImage.TYPE_INT_ARGB);
-		System.out.println("WIDTH=" + this.getImageWidth() + "HEIGHT=" + this.getImageHeight());
 
 		int actWidth = 0;
 		int actHeight = 0;
@@ -343,7 +331,6 @@ public class WmsLayer extends MapLayer {
 		for (int h = 0; h < tileArrayHeight; h++) {
 
 			BoundingBox actBbox = leftStartBox;
-			System.out.println("START BOX GEO HEIGHT:" + actBbox.getHeightGeo());
 
 			for (int w = 0; w < tileArrayWidth; w++) {
 				// CREATE NEW TILE
@@ -446,8 +433,6 @@ public class WmsLayer extends MapLayer {
 
 	}
 
-	// GETTERS AND SETTERS
-
 	/**
 	 * Receives the {@link BufferedImage} for the {@link Tile} t.
 	 *
@@ -499,7 +484,7 @@ public class WmsLayer extends MapLayer {
 			// CONVERT TO URL
 			URL url = new URL(urlContent);
 
-			System.out.println(urlContent + "");
+			// System.out.println(urlContent + "");
 
 			// RECEIVE THE IMAGE FROM THE WMS SERVER
 			BufferedImage img = ImageIO.read(url);
@@ -511,7 +496,6 @@ public class WmsLayer extends MapLayer {
 			LOG.severe("TILE IMAGE COULD NOT BE RECEIVED! CREATING REPLACEMENT IMAGE...");
 			this.createEmptyImage(t);
 		}
-
 	}
 
 	/**
@@ -519,19 +503,27 @@ public class WmsLayer extends MapLayer {
 	 * by received from the Web Map Service (WMS) server.
 	 */
 	private void createEmptyImage(Tile t) {
+
 		// CREATE AN IMAGE IN THE NEEDED SIZE
 		BufferedImage b_img = new BufferedImage(t.getImageWidth(), t.getImageHeight(), BufferedImage.TYPE_INT_ARGB);
+
 		// CREATE THE GRAPHICS FOR THIS IMAGE
 		Graphics2D graphics = b_img.createGraphics();
+
 		// SET THE PAINT COLOR
 		graphics.setPaint(new Color(255F, 185F, 185F, 255F / 2));
+
 		// DRAW A RECTANGLE OVER THE FULL IMAGE SIZE
 		graphics.fillRect(0, 0, b_img.getWidth(), b_img.getHeight());
+
 		// FLUSH DRAWING
 		b_img.flush();
+
 		// SET IMAGE
 		t.setTileImage(b_img);
 	}
+
+	// GETTERS AND SETTERS
 
 	/**
 	 * Returns the map image of this {@link WmsLayer} as {@link BufferedImage}.
