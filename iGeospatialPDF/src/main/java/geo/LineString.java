@@ -37,6 +37,7 @@ public class LineString extends Geometry {
 		super();
 		this.points = points;
 		this.calcGeoLength();
+		this.setGeometryType("LineString");
 	}
 
 	// METHODS

@@ -20,9 +20,10 @@ public class Polygon extends Geometry {
 	private ArrayList<Point2D> points = new ArrayList<>();
 
 	/**
-	 * The geographical length of this {@link Polygon} as {@link Double}.
+	 * The geographical boundary length of this {@link Polygon} as
+	 * {@link Double}.
 	 */
-	private double geoLength = 0.0;
+	private double boundaryLength = 0.0;
 
 	// CONSTRUCTORS
 
@@ -37,6 +38,7 @@ public class Polygon extends Geometry {
 		super();
 		this.points = points;
 		this.calcGeoLength();
+		this.setGeometryType("Polygon");
 	}
 
 	// METHODS
@@ -71,22 +73,23 @@ public class Polygon extends Geometry {
 	}
 
 	/**
-	 * Returns the geographical length of this {@link Polygon} in meters.
+	 * Returns the geographical boundary length of this {@link Polygon} in
+	 * meters.
 	 *
 	 * @return the geoLength as {@link Double} in meters
 	 */
 	public double getGeoLength() {
-		return geoLength;
+		return boundaryLength;
 	}
 
 	/**
-	 * Sets the geographical length of this {@link Polygon}.
+	 * Sets the geographical boundary length of this {@link Polygon}.
 	 *
 	 * @param geoLength
 	 *            the geoLength to set as {@link Double} in meters
 	 */
 	public void setGeoLength(double geoLength) {
-		this.geoLength = geoLength;
+		this.boundaryLength = geoLength;
 	}
 
 	// OTHERS
