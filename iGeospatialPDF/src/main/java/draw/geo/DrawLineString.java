@@ -49,6 +49,57 @@ public class DrawLineString extends DrawElement {
 
 	// METHODS
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see draw.DrawElement#reduce(double, double)
+	 */
+	@Override
+	public void reduce(double northing, double easting) {
+		for (int a = 0; a < this.getPdfCoords().size(); a++) {
+			PDFCoordinate temp = this.getPdfCoords().get(a);
+			temp.setX((float) (temp.getX() - northing));
+			temp.setY((float) (temp.getY() - easting));
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see draw.DrawElement#turn(double)
+	 */
+	@Override
+	public void turn(double angle) {
+		// TODO Auto-generated method stub
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see draw.DrawElement#scale(double)
+	 */
+	@Override
+	public void scale(double factor) {
+		for (int a = 0; a < this.getPdfCoords().size(); a++) {
+			PDFCoordinate temp = this.getPdfCoords().get(a);
+			temp.setX((float) (temp.getX() * factor));
+			temp.setY((float) (temp.getY() * factor));
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see draw.DrawElement#convertToPdfSystem()
+	 */
+	@Override
+	public void convertToPdfSystem() {
+		for (int a = 0; a < this.getLineString().getPoints().size(); a++) {
+			this.getPdfCoords().add(new PDFCoordinate((float) (this.getLineString().getPoints().get(a).getNorthing()),
+					(float) (this.getLineString().getPoints().get(a).getEasting())));
+		}
+	}
+
 	// GETTERS AND SETTERS
 
 	/**
