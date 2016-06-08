@@ -9,18 +9,18 @@ import com.lowagie.text.Document;
  * @since 03.05.2016
  *
  */
-public class PDFCoordinate {
+public class PdfCoordinate {
 
 	// ATTRIBUTES
 
 	/**
-	 * The X-coordinate of this {@link PDFCoordinate} inside a PDF-
+	 * The X-coordinate of this {@link PdfCoordinate} inside a PDF-
 	 * {@link Document}.
 	 */
 	private float x;
 
 	/**
-	 * The Y-coordinate of this {@link PDFCoordinate} inside a PDF -
+	 * The Y-coordinate of this {@link PdfCoordinate} inside a PDF -
 	 * {@link Document}.
 	 */
 	private float y;
@@ -28,7 +28,7 @@ public class PDFCoordinate {
 	// CONSTRUCTORS
 
 	/**
-	 * Constructor for a {@link PDFCoordinate} using a float value for the X and
+	 * Constructor for a {@link PdfCoordinate} using a float value for the X and
 	 * the Y component.
 	 * 
 	 * @param x
@@ -36,7 +36,7 @@ public class PDFCoordinate {
 	 * @param y
 	 *            the Y value to set
 	 */
-	public PDFCoordinate(float x, float y) {
+	public PdfCoordinate(float x, float y) {
 		super();
 		this.setX(x);
 		this.setY(y);
@@ -47,7 +47,7 @@ public class PDFCoordinate {
 	// GETTERS AND SETTERS
 
 	/**
-	 * Returns the X value of this {@link PDFCoordinate}.
+	 * Returns the X value of this {@link PdfCoordinate}.
 	 *
 	 * @return the x
 	 */
@@ -56,7 +56,7 @@ public class PDFCoordinate {
 	}
 
 	/**
-	 * Sets the X value of this {@link PDFCoordinate}.
+	 * Sets the X value of this {@link PdfCoordinate}.
 	 *
 	 * @param x
 	 *            the x to set
@@ -66,7 +66,7 @@ public class PDFCoordinate {
 	}
 
 	/**
-	 * Returns the Y value of this {@link PDFCoordinate}.
+	 * Returns the Y value of this {@link PdfCoordinate}.
 	 *
 	 * @return the y
 	 */
@@ -75,7 +75,7 @@ public class PDFCoordinate {
 	}
 
 	/**
-	 * Sets the Y value of this {@link PDFCoordinate}.
+	 * Sets the Y value of this {@link PdfCoordinate}.
 	 *
 	 * @param y
 	 *            the y to set

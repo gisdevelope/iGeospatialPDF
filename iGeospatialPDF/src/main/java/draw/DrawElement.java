@@ -2,7 +2,7 @@ package draw;
 
 import draw.geo.DrawPoint;
 import geo.Point2D;
-import resources.PDFCoordinate;
+import resources.PdfCoordinate;
 
 /**
  * Abstract parental class for all draw-able elements that provides functions
@@ -20,7 +20,7 @@ public abstract class DrawElement {
 	// METHODS
 
 	/**
-	 * Reduces the {@link PDFCoordinate}s of the {@link DrawElement} about the
+	 * Reduces the {@link PdfCoordinate}s of the {@link DrawElement} about the
 	 * given values in northing and easting.
 	 *
 	 * @param northing
@@ -31,7 +31,7 @@ public abstract class DrawElement {
 	public abstract void reduce(double northing, double easting);
 
 	/**
-	 * Turns the {@link PDFCoordinate}s of the {@link DrawElement} about the
+	 * Turns the {@link PdfCoordinate}s of the {@link DrawElement} about the
 	 * given angle.
 	 *
 	 * @param angle
@@ -40,7 +40,7 @@ public abstract class DrawElement {
 	public abstract void turn(double angle);
 
 	/**
-	 * Scales the {@link PDFCoordinate}s of the {@link DrawElement} by the given
+	 * Scales the {@link PdfCoordinate}s of the {@link DrawElement} by the given
 	 * factor.
 	 *
 	 * @param factor

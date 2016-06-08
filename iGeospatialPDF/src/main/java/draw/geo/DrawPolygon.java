@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 import draw.DrawElement;
 import geo.Polygon;
-import resources.PDFCoordinate;
+import resources.PdfCoordinate;
 
 /**
  * Class to represent a PDF-printable {@link Polygon}. This class extends the
@@ -27,11 +27,11 @@ public class DrawPolygon extends DrawElement {
 	private Polygon polygon;
 
 	/**
-	 * The {@link ArrayList} of {@link PDFCoordinate}, used to store the
+	 * The {@link ArrayList} of {@link PdfCoordinate}, used to store the
 	 * coordinates of the base points of this {@link DrawPolygon} inside the PDF
 	 * file.
 	 */
-	private ArrayList<PDFCoordinate> pdfCoords = new ArrayList<>();
+	private ArrayList<PdfCoordinate> pdfCoords = new ArrayList<>();
 
 	/**
 	 * The {@link Logger} to log events.
@@ -116,7 +116,7 @@ public class DrawPolygon extends DrawElement {
 			// ADD A NEW PDFCOORDIANTE
 			this.getPdfCoords().add(
 					// NEW PDFCOORDIANTE
-					new PDFCoordinate(
+					new PdfCoordinate(
 							// GET THE EASTING OF THE ACTUAL POINT FOR THE X
 							// VALUE
 							(float) (this.getPolygon().getPoints().get(a).getEasting()),
@@ -148,23 +148,23 @@ public class DrawPolygon extends DrawElement {
 	}
 
 	/**
-	 * Returns the {@link ArrayList} of {@link PDFCoordinate}s of this
+	 * Returns the {@link ArrayList} of {@link PdfCoordinate}s of this
 	 * {@link DrawPolygon}.
 	 *
-	 * @return the pdfCoords as {@link ArrayList} of {@link PDFCoordinate}s
+	 * @return the pdfCoords as {@link ArrayList} of {@link PdfCoordinate}s
 	 */
-	public ArrayList<PDFCoordinate> getPdfCoords() {
+	public ArrayList<PdfCoordinate> getPdfCoords() {
 		return pdfCoords;
 	}
 
 	/**
-	 * Sets the {@link ArrayList} of {@link PDFCoordinate}s of this
+	 * Sets the {@link ArrayList} of {@link PdfCoordinate}s of this
 	 * {@link DrawPolygon}.
 	 *
 	 * @param pdfCoords
 	 *            the pdfCoords to set
 	 */
-	public void setPdfCoords(ArrayList<PDFCoordinate> pdfCoords) {
+	public void setPdfCoords(ArrayList<PdfCoordinate> pdfCoords) {
 		this.pdfCoords = pdfCoords;
 	}
 

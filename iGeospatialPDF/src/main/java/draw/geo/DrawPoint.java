@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 
 import draw.DrawElement;
 import geo.Point2D;
-import resources.PDFCoordinate;
+import resources.PdfCoordinate;
 
 /**
  * Class to represent a PDF-printable {@link Point2D}. This class extends the
@@ -25,9 +25,9 @@ public class DrawPoint extends DrawElement {
 	private Point2D point;
 
 	/**
-	 * The {@link PDFCoordinate} to store the position inside the PDF document.
+	 * The {@link PdfCoordinate} to store the position inside the PDF document.
 	 */
-	private PDFCoordinate pdfCoord;
+	private PdfCoordinate pdfCoord;
 
 	/**
 	 * The {@link Logger} to log events.
@@ -104,7 +104,7 @@ public class DrawPoint extends DrawElement {
 		// SET THE PDFCOORDINATE
 		this.setPdfCoord(
 				// NEW PDFCOORDINATE
-				new PDFCoordinate(
+				new PdfCoordinate(
 						// USE THE EASTING
 						(float) this.point.getEasting(),
 						// USE THE NORTHING
@@ -133,21 +133,21 @@ public class DrawPoint extends DrawElement {
 	}
 
 	/**
-	 * Returns the {@link PDFCoordinate} of this {@link DrawPoint}.
+	 * Returns the {@link PdfCoordinate} of this {@link DrawPoint}.
 	 *
-	 * @return the pdfCoord as {@link PDFCoordinate}
+	 * @return the pdfCoord as {@link PdfCoordinate}
 	 */
-	public PDFCoordinate getPdfCoord() {
+	public PdfCoordinate getPdfCoord() {
 		return pdfCoord;
 	}
 
 	/**
-	 * Sets the {@link PDFCoordinate} of this {@link DrawPoint}.
+	 * Sets the {@link PdfCoordinate} of this {@link DrawPoint}.
 	 *
 	 * @param pdfCoord
 	 *            the pdfCoord to set
 	 */
-	public void setPdfCoord(PDFCoordinate pdfCoord) {
+	public void setPdfCoord(PdfCoordinate pdfCoord) {
 		this.pdfCoord = pdfCoord;
 	}
 

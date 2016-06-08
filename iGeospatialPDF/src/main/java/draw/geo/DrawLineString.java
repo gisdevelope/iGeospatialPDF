@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 import draw.DrawElement;
 import geo.LineString;
 import geo.Polygon;
-import resources.PDFCoordinate;
+import resources.PdfCoordinate;
 
 /**
  * Class to represent a PDF-printable {@link LineString}. This class extends the
@@ -29,11 +29,11 @@ public class DrawLineString extends DrawElement {
 	private LineString lineString;
 
 	/**
-	 * The {@link ArrayList} of {@link PDFCoordinate}, used to store the
+	 * The {@link ArrayList} of {@link PdfCoordinate}, used to store the
 	 * coordinates of the base points of this {@link DrawLineString} inside the
 	 * PDF file.
 	 */
-	private ArrayList<PDFCoordinate> pdfCoords = new ArrayList<>();
+	private ArrayList<PdfCoordinate> pdfCoords = new ArrayList<>();
 
 	/**
 	 * The {@link Logger} to log events.
@@ -97,7 +97,7 @@ public class DrawLineString extends DrawElement {
 	public void scale(double factor) {
 		// FOR ALL STORED PDFCOORDINATES
 		for (int a = 0; a < this.getPdfCoords().size(); a++) {
-			PDFCoordinate temp = this.getPdfCoords().get(a);
+			PdfCoordinate temp = this.getPdfCoords().get(a);
 			temp.setX((float) (temp.getX() * factor));
 			temp.setY((float) (temp.getY() * factor));
 		}
@@ -111,7 +111,7 @@ public class DrawLineString extends DrawElement {
 	@Override
 	public void convertToPdfSystem() {
 		for (int a = 0; a < this.getLineString().getPoints().size(); a++) {
-			this.getPdfCoords().add(new PDFCoordinate((float) (this.getLineString().getPoints().get(a).getNorthing()),
+			this.getPdfCoords().add(new PdfCoordinate((float) (this.getLineString().getPoints().get(a).getNorthing()),
 					(float) (this.getLineString().getPoints().get(a).getEasting())));
 		}
 	}
@@ -138,23 +138,23 @@ public class DrawLineString extends DrawElement {
 	}
 
 	/**
-	 * Returns the {@link ArrayList} of {@link PDFCoordinate}s of this
+	 * Returns the {@link ArrayList} of {@link PdfCoordinate}s of this
 	 * {@link DrawLineString}.
 	 *
-	 * @return the pdfCoords as {@link ArrayList} of {@link PDFCoordinate}s
+	 * @return the pdfCoords as {@link ArrayList} of {@link PdfCoordinate}s
 	 */
-	public ArrayList<PDFCoordinate> getPdfCoords() {
+	public ArrayList<PdfCoordinate> getPdfCoords() {
 		return pdfCoords;
 	}
 
 	/**
-	 * Sets the {@link ArrayList} of {@link PDFCoordinate}s of this
+	 * Sets the {@link ArrayList} of {@link PdfCoordinate}s of this
 	 * {@link DrawLineString}.
 	 *
 	 * @param pdfCoords
 	 *            the pdfCoords to set
 	 */
-	public void setPdfCoords(ArrayList<PDFCoordinate> pdfCoords) {
+	public void setPdfCoords(ArrayList<PdfCoordinate> pdfCoords) {
 		this.pdfCoords = pdfCoords;
 	}
 
