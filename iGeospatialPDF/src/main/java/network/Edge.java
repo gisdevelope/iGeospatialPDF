@@ -1,7 +1,7 @@
 package network;
 
 /**
- * Class to TODO
+ * Class to represent an {@link Edge} from a network.
  * 
  * @author DaGri
  * @since 12.05.2016

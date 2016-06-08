@@ -1,7 +1,7 @@
 package network;
 
 /**
- * Class to TODO
+ * Class to represent a {@link Node} from a network.
  * 
  * @author DaGri
  * @since 12.05.2016

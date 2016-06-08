@@ -1,7 +1,7 @@
 package measurement;
 
 /**
- * Class to TODO
+ * Class to represent an angle.
  * 
  * @author DaGri
  * @since 24.05.2016

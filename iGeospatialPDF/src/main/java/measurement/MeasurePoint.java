@@ -1,13 +1,13 @@
 package measurement;
 
 /**
- * Class to TODO
+ * Class to represent a measured point.
  * 
  * @author DaGri
  * @since 24.05.2016
  *
  */
-public class MeasurePoint extends MeasureObject{
+public class MeasurePoint extends MeasureObject {
 
 	// ATTRIBUTES
 

@@ -7,7 +7,7 @@ import com.lowagie.text.BadElementException;
 import com.lowagie.text.Image;
 
 /**
- * Class to TODO
+ * Class to handle image operations.
  * 
  * @author DaGri
  * @since 23.05.2016
@@ -20,7 +20,7 @@ public class ImageHandler {
 	// CONSTRUCTORS
 
 	/**
-	 * Constructor for TODO
+	 * Empty constructor for an {@link ImageHandler}.
 	 */
 	public ImageHandler() {
 

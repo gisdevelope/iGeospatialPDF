@@ -1,13 +1,12 @@
 package measurement;
 
 /**
- * Class to TODO
+ * Abstract class to be used as parental class for all {@link MeasureObject}s.
  * 
  * @author DaGri
  * @since 24.05.2016
- *
  */
-public class MeasureObject {
+public abstract class MeasureObject {
 
 	// ATTRIBUTES
 
