@@ -1,5 +1,7 @@
 package geo;
 
+import java.util.logging.Logger;
+
 import coordinateSystems.CoordinateSystem;
 import resources.ServerVersion;
 
@@ -58,6 +60,11 @@ public class BoundingBox {
 	 */
 	private double heightGeo;
 
+	/**
+	 * The {@link Logger} to log events.
+	 */
+	Logger LOG = Logger.getLogger(this.getClass().getCanonicalName());
+
 	// CONSTRUCTORS
 
 	/**
@@ -72,9 +79,17 @@ public class BoundingBox {
 	 */
 	public BoundingBox(Point2D downLeft, Point2D upRight, CoordinateSystem system) {
 		super();
+
 		this.downLeft = downLeft;
+		LOG.info("LOWER LEFT POINT2D SET");
+
 		this.upRight = upRight;
+		LOG.info("UPPER RIGHT POINT2D SET");
+
 		this.setSystem(system);
+		LOG.info("COORDIANTE SYSTEM SET");
+
+		LOG.info("CALCULATING OTHER VALUES...");
 		this.calcOthers();
 	}
 
@@ -85,20 +100,52 @@ public class BoundingBox {
 	 * {@link BoundingBox}.
 	 */
 	private void calcOthers() {
-		this.setUpLeft(new Point2D(this.getUpRight().getNorthing(), this.getDownLeft().getEasting(),
-				this.getDownLeft().getCoordSystem()));
-		this.setDownRight(new Point2D(this.getDownLeft().getNorthing(), this.getUpRight().getEasting(),
-				this.getDownLeft().getCoordSystem()));
-		this.setCenter(new Point2D(
-				this.getDownLeft().getNorthing()
-						+ (this.getDownLeft().getNorthing() - this.getUpRight().getNorthing()) / 2,
-				this.getDownLeft().getEasting()
-						+ (this.getDownLeft().getEasting() - this.getUpRight().getEasting()) / 2,
-				this.getDownLeft().getCoordSystem()));
+		LOG.info("START: CALCULATION OTHER VALUES...");
+		// CALCULATING THE UPPER LEFT POINT2D
+		this.setUpLeft(new Point2D( // CREATE NEW POINT2D
+				this.getUpRight().getNorthing(), // UPPER RIGHT NORTHING VALUE
+				this.getDownLeft().getEasting(), // LOWER LEFT EASTING VALUE
+				this.getDownLeft().getCoordSystem() // LOWER LEFT COORDINATE
+													// SYSTEM
+		));
+		LOG.info("UPPER LEFT POINT2D SET");
+		// CALCULATING THE LOWER RIGHT POINT2D
+		this.setDownRight(new Point2D( // CREATE NEW POINT
+				this.getDownLeft().getNorthing(), // LOWER LEFT NORTHING
+				this.getUpRight().getEasting(), // UPPER RIGHT EASTING
+				this.getDownLeft().getCoordSystem() // LOWER LEFT COORDINATE
+													// SYSTEM
+		));
+
+		// CALCULATE THE GEOGRAPHICAL HEIGHT
 		this.setHeightGeo(new GeoCalculator().calcDistance(downLeft, upLeft));
+		LOG.info("CALCULATED HEIGHT");
+
+		// CALCULATE THE GEOGRAPHICAL HEIGHT
 		this.setWidthGeo(new GeoCalculator().calcDistance(downLeft, downRight));
+		LOG.info("CALCULATED WIDTH");
+
+		// TODO : NACH DEN JUNIT TESTS DAS AUSKOMMENTIERTE RAUS WERFEN
+
+		LOG.info("LOWER RIGHT POINT2D SET");
+		this.setCenter(new Point2D( // NEW POINT
+				// this.getDownLeft().getNorthing()
+				// + (this.getDownLeft().getNorthing() -
+				// this.getUpRight().getNorthing()) / 2,
+				// LOWER LEFT NORTHING + BOUNDINGBOXHEIGHT / 2
+				this.getDownLeft().getNorthing() + this.getHeightGeo() / 2,
+				// this.getDownLeft().getEasting()
+				// + (this.getDownLeft().getEasting() -
+				// this.getUpRight().getEasting()) / 2,
+				// LOWER LEFT EASTING + BOUNDINGBOXWIDTH / 2
+				this.getDownLeft().getEasting() + this.getWidthGeo() / 2,
+				// LOWER LEFT COORDINATE SYSTEM
+				this.getDownLeft().getCoordSystem()));
+		LOG.info("CENTRAL POINT2D SET");
+		LOG.info("FINISHED: ALL OTHER VALUES WERE CALCUALTED");
 	}
 
+	// TODO : SIND DIE HIER NICHT IN DEN VERSIONEN UNTERSCHIEDLICH?!
 	/**
 	 * Returns the parameters of the lower left and the upper right
 	 * {@link Point2D} in the correct way for a given WMS or WFS request.
@@ -108,16 +155,30 @@ public class BoundingBox {
 	 * @return
 	 */
 	public String getCornersByVersion(ServerVersion version) {
+		// CREATE THE RESULT STRING
 		String erg = "";
+		// FOR SERVER VERSION 1.1.0
 		if (version.toString().equals(ServerVersion.v_1_1_0.toString())) {
+			// PUT THE STRING TOGETHER : EASTRING, NORTHING, EASTING NORTHING
+			LOG.info("DETECTED SERVER VERSION 1.1.0");
 			erg = "" + this.getDownLeft().getEasting() + "," + this.getDownLeft().getNorthing() + ","
 					+ this.getUpRight().getEasting() + "," + this.getUpRight().getNorthing();
-			return erg;
-		} else if (version.toString().equals(ServerVersion.v_1_3_0.toString())) {
-			erg = "" + this.getDownLeft().getEasting() + "," + this.getDownLeft().getNorthing() + ","
-					+ this.getUpRight().getEasting() + "," + this.getUpRight().getNorthing();
+			// RETURN STRING
+			LOG.info("RETURNING CORNER VALUES FOR SERVER VERSIO N1.1.0");
 			return erg;
 		}
+		// FOR SERVER VERSION 1.3.0
+		else if (version.toString().equals(ServerVersion.v_1_3_0.toString())) {
+			LOG.info("DETECTED SERVER VERSION 1.3.0");
+			// PUT THE STRING TOGETHER : EASTRING, NORTHING, EASTING NORTHING
+			erg = "" + this.getDownLeft().getEasting() + "," + this.getDownLeft().getNorthing() + ","
+					+ this.getUpRight().getEasting() + "," + this.getUpRight().getNorthing();
+			// RETURN STRING
+			LOG.info("RETURNING CORNER VALUES FOR SERVER VERSIO N1.3.0");
+			return erg;
+		}
+		// SERVER VERSION NOT SUPPORTED
+		LOG.severe("COULD NOT FIND SERVER VERSION " + version.toString() + ". NO BOUNDINGBOX CORNER ORDER RETURNED!");
 		return null;
 	}
 
@@ -131,11 +192,20 @@ public class BoundingBox {
 	 * @return bbox the adjacent {@link BoundingBox}
 	 */
 	public BoundingBox getBBoxRight(double width) {
+		LOG.info("CALCUALTING A NEW BOUNDINGBOX TO THE RIGHT...");
+		// THE ACTUAL LOWEER RIGHT IS THE NEW LOWER LEFT
 		Point2D dl = this.getDownRight();
-		Point2D ur = new Point2D(this.getUpRight().getNorthing(), this.getUpRight().getEasting() + width,
+		// THE NEW UPPER RIGHT IS THE ACUTAL UPPER RIGHT + WIDTH
+		Point2D ur = new Point2D(
+				// THE NORTHING IS THE SAME
+				this.getUpRight().getNorthing(),
+				// THE EASTING IS THE EASTING + WIDTH
+				this.getUpRight().getEasting() + width,
+				// THE SYSTEM IS THE SAME
 				this.getSystem());
-		BoundingBox erg = new BoundingBox(dl, ur, this.getSystem());
-		return erg;
+		LOG.info("FINISHED: CALCULATING BOUNDINGBOX TO THE RIGHT");
+		// RETURN THE NEW BOUNDINGBOX
+		return new BoundingBox(dl, ur, this.getSystem());
 	}
 
 	/**
@@ -148,11 +218,20 @@ public class BoundingBox {
 	 * @return bbox the adjacent {@link BoundingBox}
 	 */
 	public BoundingBox getBBoxLeft(double width) {
-		Point2D dl = new Point2D(this.getDownLeft().getNorthing(), this.getDownLeft().getEasting() - width,
+		LOG.info("CALCUALTING A NEW BOUNDINGBOX TO THE LEFT...");
+		// THE NEW LOWER LEFT IS THE ACTUAL LOWER LEFT - WIDTH
+		Point2D dl = new Point2D(
+				// THE NORTHING IS THE SAME
+				this.getDownLeft().getNorthing(),
+				// THE EASTING IS THE EASTING - WIDTH
+				this.getDownLeft().getEasting() - width,
+				// THE COORDIANTE SYSTEM IS THE SAME
 				this.getSystem());
+		// THE NEW UPPER RIGHT IS THE OLD UPPER LEFT
 		Point2D ur = this.getUpLeft();
-		BoundingBox erg = new BoundingBox(dl, ur, this.getSystem());
-		return erg;
+		LOG.info("FINISHED: CALCULATING BOUNDINGBOX TO THE LEFT");
+		// RETURN THE NEW BOUNDINGBOX
+		return new BoundingBox(dl, ur, this.getSystem());
 	}
 
 	/**
@@ -165,11 +244,20 @@ public class BoundingBox {
 	 * @return bbox the adjacent {@link BoundingBox}
 	 */
 	public BoundingBox getBBoxAbove(double height) {
+		LOG.info("CALCUALTING A NEW BOUNDINGBOX ABOVE...");
+		// THE NEW LOWER LEFT IS THE OPF UPPER LEFT
 		Point2D dl = this.getUpLeft();
-		Point2D ur = new Point2D(this.getUpRight().getNorthing() + height, this.getUpRight().getEasting(),
+		// THE NEW UPPER RIGHT IS THE ACTUAL UPPER RIGHT + HEIGHT
+		Point2D ur = new Point2D(
+				// THE NEW LOWER LEFT IS THE NORTHING + HEIGHT
+				this.getUpRight().getNorthing() + height,
+				// THE EASTING IS THE SAME
+				this.getUpRight().getEasting(),
+				// THE SYSTEM IS THE SAME
 				this.getSystem());
-		BoundingBox erg = new BoundingBox(dl, ur, this.getSystem());
-		return erg;
+		LOG.info("FINISHED: CALCULATING BOUNDINGBOX ABOVE");
+		// RETURN THE NEW BOUNDINGBOX
+		return new BoundingBox(dl, ur, this.getSystem());
 	}
 
 	/**
@@ -182,11 +270,20 @@ public class BoundingBox {
 	 * @return bbox the adjacent {@link BoundingBox}
 	 */
 	public BoundingBox getBBoxBelow(double height) {
-		Point2D dl = new Point2D(this.getDownLeft().getNorthing() - height, this.getDownLeft().getEasting(),
+		LOG.info("CALCUALTING A NEW BOUNDINGBOX BELOW...");
+		Point2D dl = new Point2D(
+				// THE NEW LOWER LEFT IS THE NORTHING - HEIGHT
+				this.getDownLeft().getNorthing() - height,
+				// THE EASTING IS THE SAME
+				this.getDownLeft().getEasting(),
+				// THE SYSTEM IS THE SAME
 				this.getSystem());
+		// THE NEW UPPER RIGHT IS THE OLD LOWER RIGHT
 		Point2D ur = this.getDownRight();
-		BoundingBox erg = new BoundingBox(dl, ur, this.getSystem());
-		return erg;
+		LOG.info("FINISHED: CALCULATING BOUNDINGBOX BELOW");
+		// RETURN THE NEW BOUNDINGBOX
+		return new BoundingBox(dl, ur, this.getSystem());
+
 	}
 
 	// GETTERS AND SETTERS

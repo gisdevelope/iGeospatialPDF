@@ -20,8 +20,7 @@ public class Point2D extends Geometry {
 	private double northing;
 
 	/**
-	 * The easting (geographic Y, mathematics X) value of this {@link Point2D}
-	 * .
+	 * The easting (geographic Y, mathematics X) value of this {@link Point2D} .
 	 */
 	private double easting;
 

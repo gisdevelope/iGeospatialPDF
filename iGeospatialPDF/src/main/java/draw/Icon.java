@@ -39,7 +39,8 @@ public class Icon {
 	 * Constructor for an {@link Icon} that uses a {@link BufferedImage} as
 	 * image, a {@link Double} as scaling factor and a {@link Boolean} that
 	 * indicates if the {@link Icon} shall be displayed centered over the
-	 * {@link DrawPoint}.
+	 * {@link DrawPoint}. TODO : BUFFEREDIMAGE ALS UEBERGABE? BESSER INTERN
+	 * UEBER PFAD MACHEN UND ABFANGEN WENN ES NICHT KLAPPT?
 	 * 
 	 * @param image
 	 *            the {@link BufferedImage} to set

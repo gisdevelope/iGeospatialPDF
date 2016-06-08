@@ -1,7 +1,9 @@
 package draw.geo;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import draw.DrawElement;
-import draw.Icon;
 import geo.Point2D;
 import resources.PDFCoordinate;
 
@@ -23,26 +25,16 @@ public class DrawPoint extends DrawElement {
 	private Point2D point;
 
 	/**
-	 * 
+	 * The {@link PDFCoordinate} to store the position inside the PDF document.
 	 */
 	private PDFCoordinate pdfCoord;
 
-	// CONSTRUCTORS
-
 	/**
-	 * Constructor for a {@link DrawPoint} using a {@link Icon} to display and a
-	 * {@link Point2D} for the geographic component.
-	 * 
-	 * @param icon
-	 *            the {@link Icon} to set
-	 * @param point
-	 *            the {@link Point2D} to set
+	 * The {@link Logger} to log events.
 	 */
-	@Deprecated
-	public DrawPoint(Icon icon, Point2D point) {
-		super();
-		this.point = point;
-	}
+	Logger LOG = Logger.getLogger(this.getClass().getCanonicalName());
+
+	// CONSTRUCTORS
 
 	/**
 	 * Constructor for a {@link DrawPoint} using a {@link Point2D} for the
@@ -53,7 +45,15 @@ public class DrawPoint extends DrawElement {
 	 */
 	public DrawPoint(Point2D point) {
 		super();
+		// SET THE LOGGING LEVEL
+		LOG.setLevel(Level.SEVERE);
+		// SET THE INTERNAL POINT
 		this.point = point;
+		LOG.info("POINT SET");
+		// CALCULATE THE PDF COORDINATES FROM THE POLYGON POINT2DS
+		LOG.info("CALUCLATING THE PDF COORDINATE...");
+		this.convertToPdfSystem();
+		LOG.info("FINISHED: CALUCLATING THE PDF COORDINATE");
 	}
 
 	// METHODS
@@ -65,7 +65,10 @@ public class DrawPoint extends DrawElement {
 	 */
 	@Override
 	public void reduce(double northing, double easting) {
-		// TODO Auto-generated method stub
+		// REDUCE THE X BY THE GIVEN EASTING
+		this.getPdfCoord().setX((float) (this.getPdfCoord().getX() - easting));
+		// REDUCE THE Y BY THE GIVEN NORTHING
+		this.getPdfCoord().setY((float) (this.getPdfCoord().getY() - northing));
 	}
 
 	/*
@@ -85,7 +88,10 @@ public class DrawPoint extends DrawElement {
 	 */
 	@Override
 	public void scale(double factor) {
-		// TODO Auto-generated method stub
+		// SCALE THE X VALUE WITH THE FACTOR
+		this.getPdfCoord().setX((float) (this.getPdfCoord().getX() * factor));
+		// SCALE THE Y VALUE WITH THE FACTOR
+		this.getPdfCoord().setY((float) (this.getPdfCoord().getY() * factor));
 	}
 
 	/*
@@ -95,7 +101,14 @@ public class DrawPoint extends DrawElement {
 	 */
 	@Override
 	public void convertToPdfSystem() {
-		// TODO Auto-generated method stub
+		// SET THE PDFCOORDINATE
+		this.setPdfCoord(
+				// NEW PDFCOORDINATE
+				new PDFCoordinate(
+						// USE THE EASTING
+						(float) this.point.getEasting(),
+						// USE THE NORTHING
+						(float) this.point.getNorthing()));
 	}
 
 	// GETTERS AND SETTERS

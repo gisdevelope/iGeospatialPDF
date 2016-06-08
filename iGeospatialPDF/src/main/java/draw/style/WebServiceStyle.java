@@ -8,20 +8,13 @@ import geo.LineString;
 import geo.Point2D;
 import geo.Polygon;
 import iText.WebServicePDF;
+import resources.PointAppearance;
 
 /**
  * Class to define and manage the possible styles of the {@link DrawElement}s
  * that can be displayed in an {@link WebServicePDF}.
  * 
- * {@link Point2D} border {@link Color} = BLACK {@link Point2D} fill
- * {@link Color} = BLACK {@link Point2D} radius = 1 {@link Point2D} line weight
- * = 1 {@link Point2D} filled = true {@link Point2D} {@link Icon} = null
- * 
- * {@link LineString} border {@link Color} = BLACK {@link LineString} line
- * weight = 1
- * 
- * {@link Polygon} border {@link Color} = BLACK {@link Polygon} fill
- * {@link Color} = BLACK {@link Polygon} line weight = 1
+ * TODO : STANDARTWERTE AUFLISTEN
  * 
  * @author DaGri
  * @since 12.05.2016
@@ -90,22 +83,18 @@ public class WebServiceStyle extends Style {
 	 */
 	private int pointRadius = 1;
 
+	/**
+	 * The {@link PointAppearance} of the {@link Point2D}s that defines the
+	 * signature of the {@link Point2D}s. May be null: A standard appearance
+	 * will be used.
+	 */
+	private PointAppearance pointAppearance;
+
 	// CONSTRUCTORS
 
 	/**
 	 * Empty constructor for a {@link WebServiceStyle}. The default values will
-	 * be used:
-	 * 
-	 * {@link Point2D} border {@link Color} = BLACK {@link Point2D} fill
-	 * {@link Color} = BLACK {@link Point2D} radius = 1 {@link Point2D} line
-	 * weight = 1 {@link Point2D} filled = true {@link Point2D} {@link Icon} =
-	 * null
-	 * 
-	 * {@link LineString} border {@link Color} = BLACK {@link LineString} line
-	 * weight = 1
-	 * 
-	 * {@link Polygon} border {@link Color} = BLACK {@link Polygon} fill
-	 * {@link Color} = BLACK {@link Polygon} line weight = 1
+	 * be used. TODO : AUFLISTEN
 	 */
 	public WebServiceStyle() {
 		super();
@@ -138,10 +127,13 @@ public class WebServiceStyle extends Style {
 	 *            the {@link Icon} of the {@link Point2D}s
 	 * @param pointRadius
 	 *            the {@link Integer} radius of the {@link Point2D}s
+	 * @param pointApp
+	 *            the {@link PointAppearance} to use
 	 */
 	public WebServiceStyle(Color point2dBorderColor, Color lineStringColor, Color polygonBorderColor,
 			Color point2dFillColor, Color polygonFillColor, float point2dLineweight, float lineStringLineweight,
-			float polygonLineweight, boolean point2dFilled, boolean polygonFilled, Icon pointIcon, int pointRadius) {
+			float polygonLineweight, boolean point2dFilled, boolean polygonFilled, Icon pointIcon, int pointRadius,
+			PointAppearance pointApp) {
 		super();
 		this.point2dBorderColor = point2dBorderColor;
 		this.lineStringColor = lineStringColor;
@@ -155,6 +147,7 @@ public class WebServiceStyle extends Style {
 		this.polygonFilled = polygonFilled;
 		this.pointIcon = pointIcon;
 		this.pointRadius = pointRadius;
+		this.pointAppearance = pointApp;
 	}
 
 	// METHODS
@@ -174,15 +167,18 @@ public class WebServiceStyle extends Style {
 	 *            the border {@link Color} of the {@link Point2D}s
 	 * @param point2dFillColor
 	 *            the fill {@link Color} of the {@link Point2D}s
+	 * @param pointApp
+	 *            the {@link PointAppearance} to use
 	 */
 	public void setPointAppearance(int pointRadius, Icon pointIcon, boolean point2dFilled, float point2dLineweight,
-			Color point2dBorderColor, Color point2dFillColor) {
+			Color point2dBorderColor, Color point2dFillColor, PointAppearance pointAppearance) {
 		this.point2dBorderColor = point2dBorderColor;
 		this.point2dFillColor = point2dFillColor;
 		this.point2dLineweight = point2dLineweight;
 		this.point2dFilled = point2dFilled;
 		this.pointIcon = pointIcon;
 		this.pointRadius = pointRadius;
+		this.pointAppearance = pointAppearance;
 	};
 
 	/**
@@ -454,6 +450,25 @@ public class WebServiceStyle extends Style {
 	 */
 	public void setPointRadius(int pointRadius) {
 		this.pointRadius = pointRadius;
+	}
+
+	/**
+	 * Returns the {@link PointAppearance} as {@link PointAppearance}.
+	 *
+	 * @return the pointAppearance
+	 */
+	public PointAppearance getPointAppearance() {
+		return pointAppearance;
+	}
+
+	/**
+	 * Sets the {@link PointAppearance}.
+	 *
+	 * @param pointAppearance
+	 *            the pointAppearance to set
+	 */
+	public void setPointAppearance(PointAppearance pointAppearance) {
+		this.pointAppearance = pointAppearance;
 	};
 
 	// OTHERS

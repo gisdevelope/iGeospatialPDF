@@ -1,7 +1,6 @@
 package iText;
 
 import java.awt.image.BufferedImage;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.logging.Logger;
 
@@ -14,7 +13,6 @@ import com.lowagie.text.pdf.PdfLayer;
 import com.lowagie.text.pdf.PdfName;
 import com.lowagie.text.pdf.PdfStructureElement;
 import com.lowagie.text.pdf.PdfStructureTreeRoot;
-import com.lowagie.text.pdf.PdfWriter;
 
 import mapContent.DataInputLayer;
 import mapContent.WfsLayer;
@@ -55,53 +53,131 @@ public class WebServicePDF extends GeospatialPDF {
 	 */
 	@Override
 	public void createPDF() {
+
+		LOG.info("TRYING TO CREATE PDF...");
+
 		try {
-			// PREPARE TO WRITE IN THE PDF
-			PdfWriter writer = PdfWriter.getInstance(this.getDoc(),
-					new FileOutputStream("output/" + System.currentTimeMillis() + ".pdf"));
-			writer.setTagged();
+			// SET THE WRITER TAGGED BEFORE OPENING THE DOCUMENT
+			this.getWriter().setTagged();
 
 			// OPEN THE DOCUMENT
+			LOG.info("OPENING THE DOCUMENT");
 			this.getDoc().open();
 
-			// CREATE THE STRUCTURE TREE ROOT
-			PdfStructureTreeRoot tree = writer.getStructureTreeRoot();
-			// CREATE THE TOP ELEMENT OF THE TREE
-			PdfStructureElement top = new PdfStructureElement(tree, new PdfName("Data"));
-
-			// CREATE NEW PAGE WITH A SIZE THAT FITS BEST TO THE MAP LAYOUT
-			// doc.newPage();
-
 			// PREPARE TO DRAW DIRECTLY TO THE PDF
-			PdfContentByte contByte = writer.getDirectContent();
+			PdfContentByte contByte = getWriter().getDirectContent();
+
+			// THE STRUCTURE TREE ROOT
+			PdfStructureTreeRoot tree = this.getWriter().getStructureTreeRoot();
+
+			// EXTRACT THE STRUCTURE ELEMENT TOP
+			PdfStructureElement top = new PdfStructureElement(tree, new PdfName("WFS-Data"));
 
 			for (int a = 0; a < this.getLayers().size(); a++) {
 
+				// RECEIVE THE DATA FOR THE LAYER, WHATEVER LAYER IT IS
+
+				LOG.info("RECEIVING DATA FOR THE LAYER " + a);
+
 				this.getLayers().get(a).receive();
 
+				// IF THE LAYER IS A WMS LAYER
 				if (this.getLayers().get(a) instanceof WmsLayer) {
-					contByte.beginLayer(
-							new PdfLayer(((WmsLayer) (this.getLayers().get(a))).getLayers().toString() + "", writer));
+
+					LOG.info("THIS LAYER IS A WMS-LAYER");
+					LOG.info("BEGINING THE PDF-LAYER OF THE WMS-LAYER");
+
+					// START THE LAYER WITH THE NAME OF THE MAP LAYERS
+					contByte.beginLayer(new PdfLayer(((WmsLayer) (this.getLayers().get(a))).getLayers().toString() + "",
+							getWriter()));
+
+					// CREATE BUFFERED IMAGE OF THE MAP IMAGE
 					BufferedImage buff = ((WmsLayer) (this.getLayers().get(a))).getMapImage();
 
+					// CREATE ITEXT IMAGE
 					Image img = Image.getInstance(buff, null);
+
+					// SET THE ABSOLUTE POSITION OF THE IMAGE (NEEDED)
 					img.setAbsolutePosition(0, 0);
 
-					// BILD SKALIEREN
+					// SCALE THE IMAGE
 					this.scaleImage(img);
 
+					// ADD THE GEOREFFERECING INFORMATION TO THE IMAGE
+					this.addGeoreferencing(img, ((WmsLayer) (this.getLayers().get(a))).getBbox());
+
+					// ADD THE IMAGE TO THE PAGE
 					contByte.addImage(img);
+
+					LOG.info("ENDING THE PDF-LAYER OF THE WMS-LAYER");
+
+					// END THE LAYER
 					contByte.endLayer();
-				} else if (this.getLayers().get(a) instanceof WfsLayer) {
-
-				} else if (this.getLayers().get(a) instanceof DataInputLayer) {
-
 				}
 
+				// ELSE IF THE LAYER IS A WFS LAYER
+				else if (this.getLayers().get(a) instanceof WfsLayer) {
+
+					LOG.info("THIS LAYER IS A WFS-LAYER");
+
+					// TODO : DAS MUSS SPAETER UEBERGEBEN WERDEN!
+					double angle = 0;
+					double factor = 0;
+
+					// TODO WO IST DIE STYLE UEBERGABE?
+					((WfsLayer) this.getLayers().get(a)).getCollection().getDrawer().setContByte(contByte);
+					((WfsLayer) this.getLayers().get(a)).getCollection().getDrawer().setTop(top);
+					// ((WebServiceDrawer) ((WfsLayer)
+					// this.getLayers().get(a)).getCollection().getDrawer())
+					// .setStyle(((WfsLayer)
+					// this.getLayers().get(a)).getStyle());
+
+					((WfsLayer) this.getLayers().get(a)).prepareData(this.getBbox().getDownLeft().getNorthing(),
+							this.getBbox().getDownLeft().getEasting(), angle, factor);
+
+					contByte.beginLayer(
+							new PdfLayer("Polygons: " + ((WfsLayer) this.getLayers().get(a)).getLink(), getWriter()));
+
+					((WfsLayer) this.getLayers().get(a)).drawPolygons(contByte);
+
+					contByte.endLayer();
+
+					contByte.beginLayer(
+							new PdfLayer("Polylines " + ((WfsLayer) this.getLayers().get(a)).getLink(), getWriter()));
+
+					((WfsLayer) this.getLayers().get(a)).drawLinestrings(contByte);
+
+					contByte.endLayer();
+
+					contByte.beginLayer(
+							new PdfLayer("Point2Ds " + ((WfsLayer) this.getLayers().get(a)).getLink(), getWriter()));
+
+					((WfsLayer) this.getLayers().get(a)).drawPoints(contByte);
+
+					contByte.endLayer();
+
+				}
+				// ELSE IF THE LAYER IS A DATAINPUT LAYER
+				else if (this.getLayers().get(a) instanceof DataInputLayer) {
+
+					LOG.info("THIS LAYER IS A DATAINPUT-LAYER");
+					// TODO : FILL
+				}
+				// ELSE THE LAYER KIND IS NOT SUPPORTED IN A WEB SERVICE PDF
+				else {
+					LOG.severe("LAYER NOT SUPPORTED IN A WEBSERVICE-PDF");
+				}
+
+				LOG.info("CLOSING THE DOCUMENT");
+
+				// CLOSE THE DOCUMENT TO STOP EDITING AND GIVE IT FREE IN THE
+				// FILE SYSTEM
 				this.getDoc().close();
+
 			}
 		} catch (DocumentException | IOException e) {
 			e.printStackTrace();
+			LOG.severe("ERROR WHILE CREATING PDF DOCUMENT!");
 		}
 	}
 

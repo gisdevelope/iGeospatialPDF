@@ -23,5 +23,5 @@ public abstract class Style {
 	// GETTERS AND SETTERS
 
 	// OTHERS
-	
+
 }

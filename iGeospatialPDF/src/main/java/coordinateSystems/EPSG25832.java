@@ -19,7 +19,10 @@ public class EPSG25832 extends CoordinateSystem {
 	 */
 	public EPSG25832() {
 		super();
+		// SET THE IDENTYFIER CODE
 		this.setEPSG(25832);
+		
+		// SET THE WKT STRING
 		this.setWKT(
 				//@formatter:off
 				"PROJCS["

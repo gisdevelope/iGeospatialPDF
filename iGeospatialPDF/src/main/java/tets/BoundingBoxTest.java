@@ -11,12 +11,7 @@ import geo.Point2D;
  * @since 21.05.2016
  */
 public class BoundingBoxTest {
-
-	/**
-	 * TODO
-	 *
-	 * @param args
-	 */
+ 
 	public static void main(String[] args) {
 		BoundingBox bbox = new BoundingBox(new Point2D(0, 0, new EPSG25832()), new Point2D(100, 100, new EPSG25832()),
 				new EPSG25832());

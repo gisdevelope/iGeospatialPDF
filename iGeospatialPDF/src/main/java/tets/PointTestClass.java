@@ -4,7 +4,7 @@ import coordinateSystems.EPSG25832;
 import geo.Point2D;
 
 /**
- * Class to TODO
+ * Class to test {@link Point2D} behaviour.
  * 
  * @author DaGri
  * @since 21.05.2016
@@ -12,11 +12,7 @@ import geo.Point2D;
  */
 public class PointTestClass {
 
-	/**
-	 * TODO
-	 *
-	 * @param args
-	 */
+	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 
 		double easting = 374300.0;

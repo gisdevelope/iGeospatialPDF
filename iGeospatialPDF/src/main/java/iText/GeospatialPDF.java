@@ -1,10 +1,25 @@
 package iText;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Image;
 import com.lowagie.text.PageSize;
+import com.lowagie.text.pdf.BadPdfFormatException;
+import com.lowagie.text.pdf.PdfArray;
+import com.lowagie.text.pdf.PdfDeveloperExtension;
+import com.lowagie.text.pdf.PdfDictionary;
+import com.lowagie.text.pdf.PdfImage;
+import com.lowagie.text.pdf.PdfIndirectObject;
+import com.lowagie.text.pdf.PdfName;
+import com.lowagie.text.pdf.PdfNumber;
+import com.lowagie.text.pdf.PdfString;
+import com.lowagie.text.pdf.PdfWriter;
 
 import draw.DrawElement;
 import draw.drawer.Drawer;
@@ -68,6 +83,11 @@ public abstract class GeospatialPDF {
 	private Document doc;
 
 	/**
+	 * The {@link PdfWriter} used to write into the PDF file.
+	 */
+	private PdfWriter writer;
+
+	/**
 	 * The {@link Logger} used to log.
 	 */
 	Logger LOG;
@@ -82,8 +102,15 @@ public abstract class GeospatialPDF {
 	 *            the size of the map page
 	 */
 	public GeospatialPDF(PdfPageSize pageSize) {
+
+		// SET THE GIVEN PAGE SIZE
 		this.setPageSize(pageSize);
+
+		// CALCULATE THE DOCUMENT SIZE
 		this.calcDocumentSize(pageSize);
+
+		// SET THE LOGGER
+		this.LOG = Logger.getLogger(this.getClass().getCanonicalName());
 	}
 
 	// METHODS
@@ -158,6 +185,115 @@ public abstract class GeospatialPDF {
 			LOG.severe("PAGE SIZE NOT SUPPORTED!");
 			this.setDoc(new Document(PageSize.A0));
 		}
+
+		// PREPARE TO WRITE IN THE PDF
+		try {
+			this.setWriter(PdfWriter.getInstance(this.getDoc(),
+					new FileOutputStream("output/" + System.currentTimeMillis() + ".pdf")));
+		} catch (FileNotFoundException | DocumentException e) {
+			LOG.severe("COULD NOT CREATE WRITER!");
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Adds the georeferencing information to the {@link Image} given, by
+	 * reading out the {@link BoundingBox} data.
+	 *
+	 * @param img
+	 *            the {@link Image} to add the data to
+	 * @param imgBbox
+	 *            the {@link BoundingBox} to use for gaining the data
+	 * @return img the {@link Image} with added georeferencing information
+	 */
+	public Image addGeoreferencing(Image img, BoundingBox imgBbox) {
+		try {
+
+			// SET PDF VERSION TO 1.7
+			this.getWriter().setPdfVersion(PdfWriter.PDF_VERSION_1_7);
+
+			// SET THE EXTENSION LEVEL
+			this.getWriter().addDeveloperExtension(PdfDeveloperExtension.ADOBE_1_7_EXTENSIONLEVEL3);
+
+			// SET USERPROPERTIS TO TRUE
+			this.getWriter().setUserProperties(true);
+
+			// BOUNDS ARRAY
+			PdfArray bounds = new PdfArray(new float[] { 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f });
+
+			// PDU ARRAY: SET THE MEASURE-UNITS
+			// UNIT CONVERSIONS CAN BE HANDLED INSIDE THE ADOBE READER
+			PdfArray pdu = new PdfArray();
+			pdu.add(new PdfName("KM"));
+			pdu.add(new PdfName("SQKM"));
+			pdu.add(new PdfName("DEG"));
+
+			// LPTS ARRAY
+			PdfArray lpts = new PdfArray();
+			lpts.add(new float[] { 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f });
+
+			// GPTS ARRAY: COORDINATES OF THE CORNERS
+			PdfArray gpts = new PdfArray();
+			gpts.add(new float[] { // CREATE THE FLOAT ARRAY TO CREATE
+					// THE LOWER LEFT NORTHING
+					(float) (imgBbox.getDownLeft().getNorthing()),
+					// THE LOWER LEFT EASTING
+					(float) (imgBbox.getDownLeft().getEasting()),
+					// THE UPPER LEFT NORTHING
+					(float) (imgBbox.getUpLeft().getNorthing()),
+					// THE UPPER LEFT EASTING
+					(float) (imgBbox.getUpLeft().getEasting()),
+					// THE UPPER RIGHT NORTHING
+					(float) (imgBbox.getUpRight().getNorthing()),
+					// THE UPPER LEFT EASTING
+					(float) (imgBbox.getUpRight().getEasting()),
+					// THE LOWER RIGHT NORTHING
+					(float) (imgBbox.getDownRight().getNorthing()),
+					// THE LOWER LEFT EASTING
+					(float) (imgBbox.getDownRight().getEasting()) });
+
+			// CREATE DICTIONARY „MEASURE“ AND NAME IT
+			// SET SUBTYPE
+			// LIKE IN ISO-32000-1 FROM ADOBE SYSTEMS
+			PdfDictionary measure = new PdfDictionary();
+			measure.put(PdfName.TYPE, new PdfName("Measure"));
+			measure.put(PdfName.SUBTYPE, new PdfName("GEO"));
+
+			// PUT THE WKT STRING INTO ITS DICTIONARY
+			PdfDictionary wktDic = new PdfDictionary();
+			wktDic.put(PdfName.TYPE, new PdfName("PROJCS"));
+			wktDic.put(new PdfName("EPSG"), new PdfNumber("25832"));
+			wktDic.put(new PdfName("WKT"), new PdfString(imgBbox.getSystem().getWKT()));
+
+			// CREATE INDIRECT OBJECT USED AS REFERENCE
+			PdfIndirectObject indObj = this.getWriter().addToBody(wktDic);
+
+			// CREATE OBJECTS AND ADD THEM TO THE MEASURE DICTIONARY
+			measure.put(new PdfName("Bounds"), bounds);
+
+			// USE THE INDIRECT REFERENCE FOR "GCS" AND "DCS"
+			measure.put(new PdfName("GCS"), indObj.getIndirectReference());
+			measure.put(new PdfName("DCS"), indObj.getIndirectReference());
+			measure.put(new PdfName("GPTS"), gpts);
+			measure.put(new PdfName("LPTS"), lpts);
+			measure.put(new PdfName("PDU"), pdu);
+
+			// CREATE INDIRECT OBJECT TO BE RETURNED AND ADDED TO THE
+			PdfIndirectObject indObj2 = this.getWriter().addToBody(measure);
+			PdfImage stream = new PdfImage(img, "", null);
+			stream.put(new PdfName("Measure"), indObj2.getIndirectReference());
+			PdfIndirectObject ref = this.getWriter().addToBody(stream);
+			img.setDirectReference(ref.getIndirectReference());
+
+			LOG.info("GEOREFERENCING INFORMATION ADDED TO THE IMAGE");
+
+			return img;
+
+		} catch (IOException | BadPdfFormatException e) {
+			LOG.severe("COULD NOT ADD GEOREFERENCIN TO THE IMAGE");
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	// GETTERS AND SETTERS
@@ -312,10 +448,29 @@ public abstract class GeospatialPDF {
 	 * Sets the {@link Document} of this {@link GeospatialPDF}.
 	 *
 	 * @param doc
-	 *            the doc to set
+	 *            the {@link Document} to set
 	 */
 	public void setDoc(Document doc) {
 		this.doc = doc;
+	}
+
+	/**
+	 * Returns the {@link PdfWriter} of this {@link GeospatialPDF}.
+	 *
+	 * @return the writer as {@link PdfWriter}
+	 */
+	public PdfWriter getWriter() {
+		return writer;
+	}
+
+	/**
+	 * Sets the {@link PdfWriter} of this {@link GeospatialPDF}.
+	 *
+	 * @param writer
+	 *            the writer to set
+	 */
+	public void setWriter(PdfWriter writer) {
+		this.writer = writer;
 	}
 
 	// OTHERS

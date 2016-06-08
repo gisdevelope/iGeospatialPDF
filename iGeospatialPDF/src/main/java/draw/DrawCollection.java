@@ -1,124 +1,71 @@
 package draw;
 
-import java.util.ArrayList;
-
-import draw.geo.DrawLineString;
-import draw.geo.DrawPoint;
-import draw.geo.DrawPolygon;
+import draw.drawer.Drawer;
+import draw.style.Style;
 
 /**
  * Class to collect various {@link DrawElement}s.
  * 
  * @author DaGri
  * @since 03.05.2016
- *
  */
-public class DrawCollection {
+public abstract class DrawCollection {
 
 	// ATTRIBUTES
 
 	/**
-	 * The {@link ArrayList} used to store the {@link DrawPoint}s.
+	 * The {@link Style} to use to draw the contained elements.
 	 */
-	private ArrayList<DrawPoint> points = new ArrayList<>();
+	private Style style = new Style() {
+	};
 
 	/**
-	 * The {@link ArrayList} used to store the {@link DrawLineString}s.
+	 * The {@link Drawer} used to draw.
 	 */
-	private ArrayList<DrawLineString> linestrings = new ArrayList<>();
-
-	/**
-	 * The {@link ArrayList} used to store the {@link DrawPolygon}s.
-	 */
-	private ArrayList<DrawPolygon> polygons = new ArrayList<>();
-
-	// TODO : HIER DIE STYLES UNTERBRINGEN?
+	private Drawer drawer;
 
 	// CONSTRUCTORS
 
-	/**
-	 * Empty constructor for a {@link DrawCollection}.
-	 *
-	 */
-	public DrawCollection() {
-
-	}
-
 	// METHODS
-
-	/**
-	 * Adds a {@link DrawElement} to the {@link DrawCollection}.
-	 *
-	 * @param de
-	 *            the {@link DrawElement} to add
-	 */
-	public void addDrawElement(DrawElement de) {
-		if (de.getClass().equals(DrawPoint.class)) {
-			this.getPoints().add((DrawPoint) de);
-		} else if (de.getClass().equals(DrawLineString.class)) {
-			this.getLinestrings().add((DrawLineString) de);
-		} else if (de.getClass().equals(DrawPolygon.class)) {
-			this.getPolygons().add((DrawPolygon) de);
-		}
-	}
 
 	// GETTERS AND SETTERS
 
 	/**
-	 * Returns the {@link ArrayList} of {@link DrawPoint}s.
+	 * Returns the {@link Style}.
 	 *
-	 * @return the points
+	 * @return the style as {@link Style}
 	 */
-	public ArrayList<DrawPoint> getPoints() {
-		return points;
+	public Style getStyle() {
+		return style;
 	}
 
 	/**
-	 * Sets the {@link ArrayList} of {@link DrawPoint}s.
+	 * Sets the {@link Style}.
 	 *
-	 * @param points
-	 *            the points to set
+	 * @param style
+	 *            the style to set
 	 */
-	public void setPoints(ArrayList<DrawPoint> points) {
-		this.points = points;
+	public void setStyle(Style style) {
+		this.style = style;
 	}
 
 	/**
-	 * Returns the {@link ArrayList} of {@link DrawLineString}s.
+	 * Returns the {@link Drawer}.
 	 *
-	 * @return the linestrings
+	 * @return the drawer as {@link Drawer}
 	 */
-	public ArrayList<DrawLineString> getLinestrings() {
-		return linestrings;
+	public Drawer getDrawer() {
+		return drawer;
 	}
 
 	/**
-	 * Sets the {@link ArrayList} of {@link DrawLineString}s.
+	 * Sets the {@link Drawer}.
 	 *
-	 * @param linestrings
-	 *            the linestrings to set
+	 * @param drawer
+	 *            the drawer to set
 	 */
-	public void setLinestrings(ArrayList<DrawLineString> linestrings) {
-		this.linestrings = linestrings;
-	}
-
-	/**
-	 * Returns the {@link ArrayList} of {@link DrawPolygons}s.
-	 *
-	 * @return the polygons
-	 */
-	public ArrayList<DrawPolygon> getPolygons() {
-		return polygons;
-	}
-
-	/**
-	 * Sets the {@link ArrayList} of {@link DrawPolygons}s.
-	 *
-	 * @param polygons
-	 *            the polygons to set
-	 */
-	public void setPolygons(ArrayList<DrawPolygon> polygons) {
-		this.polygons = polygons;
+	public void setDrawer(Drawer drawer) {
+		this.drawer = drawer;
 	}
 
 	// OTHERS

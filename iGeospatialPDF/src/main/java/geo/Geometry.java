@@ -15,7 +15,7 @@ public abstract class Geometry {
 	 * The type of this {@link Geometry} as {@link String}.
 	 */
 	private String geometryType;
-	
+
 	// CONSTRUCTORS
 
 	// METHODS
@@ -34,7 +34,8 @@ public abstract class Geometry {
 	/**
 	 * Sets the geometry type of this {@link Geometry}.
 	 *
-	 * @param geometryType the geometryType to set
+	 * @param geometryType
+	 *            the geometryType to set
 	 */
 	public void setGeometryType(String geometryType) {
 		this.geometryType = geometryType;

@@ -1,6 +1,8 @@
 package draw;
 
-import draw.style.Style;
+import draw.geo.DrawPoint;
+import geo.Point2D;
+import resources.PDFCoordinate;
 
 /**
  * Abstract parental class for all draw-able elements that provides functions
@@ -13,35 +15,46 @@ public abstract class DrawElement {
 
 	// ATTRIBUTES
 
-	/**
-	 * The {@link Style} object of this {@link DrawElement}.
-	 */
-	private Style style;
-
 	// CONSTRUCTORS
 
 	// METHODS
 
+	/**
+	 * Reduces the {@link PDFCoordinate}s of the {@link DrawElement} about the
+	 * given values in northing and easting.
+	 *
+	 * @param northing
+	 *            the northing to reduce in meters as {@link Double}
+	 * @param easting
+	 *            the easting to reduce in meters as {@link Double}
+	 */
+	public abstract void reduce(double northing, double easting);
+
+	/**
+	 * Turns the {@link PDFCoordinate}s of the {@link DrawElement} about the
+	 * given angle.
+	 *
+	 * @param angle
+	 *            the angle to turn about in radiant
+	 */
+	public abstract void turn(double angle);
+
+	/**
+	 * Scales the {@link PDFCoordinate}s of the {@link DrawElement} by the given
+	 * factor.
+	 *
+	 * @param factor
+	 *            the factor to scale about as {@link Double}
+	 */
+	public abstract void scale(double factor);
+
+	/**
+	 * Converts the {@link Point2D}s of the internal stored elements to the
+	 * internal {@link DrawPoint}s.
+	 */
+	public abstract void convertToPdfSystem();
+
 	// GETTERS AND SETTERS
-
-	/**
-	 * Returns the {@link Style} element of this {@link DrawElement}.
-	 *
-	 * @return the style
-	 */
-	public Style getStyle() {
-		return style;
-	}
-
-	/**
-	 * Sets the {@link Style} element of this {@link DrawElement}.
-	 *
-	 * @param style
-	 *            the style to set
-	 */
-	public void setStyle(Style style) {
-		this.style = style;
-	}
 
 	// OTHERS
 }

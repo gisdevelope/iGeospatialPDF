@@ -38,8 +38,8 @@ public class PDFCoordinate {
 	 */
 	public PDFCoordinate(float x, float y) {
 		super();
-		this.x = x;
-		this.y = y;
+		this.setX(x);
+		this.setY(y);
 	}
 
 	// METHODS

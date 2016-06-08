@@ -163,6 +163,37 @@ public class WmsLayer extends MapLayer {
 		// this.putOutImage("string");
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see mapContent.MapLayer#reduceData(double, double)
+	 */
+	@Override
+	void reduceData(double northing, double easting) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see mapContent.MapLayer#turnData(double)
+	 */
+	@Override
+	void turnData(double angle) {
+		// TODO Auto-generated method stub
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see mapContent.MapLayer#scaleData(double)
+	 */
+	@Override
+	void scaleData(double factor) {
+		// TODO Auto-generated method stub
+	}
+
 	/**
 	 * Saves an image to the file system.
 	 * 

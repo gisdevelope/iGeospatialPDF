@@ -1,6 +1,8 @@
 package draw.geo;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import draw.DrawElement;
 import geo.LineString;
@@ -31,7 +33,12 @@ public class DrawLineString extends DrawElement {
 	 * coordinates of the base points of this {@link DrawLineString} inside the
 	 * PDF file.
 	 */
-	private ArrayList<PDFCoordinate> pdfCoords;
+	private ArrayList<PDFCoordinate> pdfCoords = new ArrayList<>();
+
+	/**
+	 * The {@link Logger} to log events.
+	 */
+	Logger LOG = Logger.getLogger(this.getClass().getCanonicalName());
 
 	// CONSTRUCTORS
 
@@ -44,7 +51,13 @@ public class DrawLineString extends DrawElement {
 	 */
 	public DrawLineString(LineString lineString) {
 		super();
+		// SET THE LOGGING LEVEL
+		LOG.setLevel(Level.SEVERE);
 		this.lineString = lineString;
+		LOG.info("LINESTRING SET");
+		LOG.info("CALUCLATING THE PDF COORDINATE...");
+		this.convertToPdfSystem();
+		LOG.info("FINISHED: CALUCLATING THE PDF COORDINATE");
 	}
 
 	// METHODS
@@ -56,10 +69,12 @@ public class DrawLineString extends DrawElement {
 	 */
 	@Override
 	public void reduce(double northing, double easting) {
+		// FOR ALL STORED PDFCOORDINATES
 		for (int a = 0; a < this.getPdfCoords().size(); a++) {
-			PDFCoordinate temp = this.getPdfCoords().get(a);
-			temp.setX((float) (temp.getX() - northing));
-			temp.setY((float) (temp.getY() - easting));
+			// REDURCE THE X BY THE GIVEN EASTING
+			this.getPdfCoords().get(a).setX((float) (this.getPdfCoords().get(a).getX() - easting));
+			// REDURCE THE Y BY THE GIVEN NORTHING
+			this.getPdfCoords().get(a).setY((float) (this.getPdfCoords().get(a).getY() - northing));
 		}
 	}
 
@@ -80,6 +95,7 @@ public class DrawLineString extends DrawElement {
 	 */
 	@Override
 	public void scale(double factor) {
+		// FOR ALL STORED PDFCOORDINATES
 		for (int a = 0; a < this.getPdfCoords().size(); a++) {
 			PDFCoordinate temp = this.getPdfCoords().get(a);
 			temp.setX((float) (temp.getX() * factor));

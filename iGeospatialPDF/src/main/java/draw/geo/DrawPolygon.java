@@ -1,6 +1,8 @@
 package draw.geo;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import draw.DrawElement;
 import geo.Polygon;
@@ -29,7 +31,12 @@ public class DrawPolygon extends DrawElement {
 	 * coordinates of the base points of this {@link DrawPolygon} inside the PDF
 	 * file.
 	 */
-	private ArrayList<PDFCoordinate> pdfCoords;
+	private ArrayList<PDFCoordinate> pdfCoords = new ArrayList<>();
+
+	/**
+	 * The {@link Logger} to log events.
+	 */
+	Logger LOG = Logger.getLogger(this.getClass().getCanonicalName());
 
 	// CONSTRUCTORS
 
@@ -42,9 +49,17 @@ public class DrawPolygon extends DrawElement {
 	 */
 	public DrawPolygon(Polygon polygon) {
 		super();
+		// SET THE LOGGING LEVEL
+		LOG.setLevel(Level.SEVERE);
+		// SET THE INTERNAL POLYGON
 		this.setPolygon(polygon);
-
+		LOG.info("POLYGON SET");
+		// CALCULATE THE PDF COORDINATES FROM THE POLYGON POINT2DS
+		LOG.info("CALUCLATING THE PDF COORDINATES...");
+		this.convertToPdfSystem();
+		LOG.info("FINISHED: CALUCLATING THE PDF COORDINATES");
 	}
+
 	// METHODS
 
 	/*
@@ -54,7 +69,13 @@ public class DrawPolygon extends DrawElement {
 	 */
 	@Override
 	public void reduce(double northing, double easting) {
-		// TODO Auto-generated method stub
+		// FOR ALL STORED PDFCOORDIANTES
+		for (int a = 0; a < this.getPdfCoords().size(); a++) {
+			// REDUCE THE X BY THE GIVEN EASTING
+			this.getPdfCoords().get(a).setX((float) (this.getPdfCoords().get(a).getX() - easting));
+			// REDUCE THE Y BY THE GIVEN NORTHING
+			this.getPdfCoords().get(a).setY((float) (this.getPdfCoords().get(a).getY() - northing));
+		}
 	}
 
 	/*
@@ -74,15 +95,35 @@ public class DrawPolygon extends DrawElement {
 	 */
 	@Override
 	public void scale(double factor) {
-		// TODO Auto-generated method stub
+		// FOR ALL STORED PDFCOORDIANTES
+		for (int a = 0; a < this.getPdfCoords().size(); a++) {
+			// SCALE THE X WITH THE GIVEN FACTOR
+			this.getPdfCoords().get(a).setX((float) (this.getPdfCoords().get(a).getX() * factor));
+			// SCALE THE Y WITH THE GIVEN FACTOR
+			this.getPdfCoords().get(a).setY((float) (this.getPdfCoords().get(a).getY() * factor));
+		}
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see draw.DrawElement#convertToPdfSystem()
 	 */
 	@Override
 	public void convertToPdfSystem() {
-		// TODO Auto-generated method stub
+		// FOR EVERY POINT2D OF THE POLYGON
+		for (int a = 0; a < this.getPolygon().getPoints().size(); a++) {
+			// ADD A NEW PDFCOORDIANTE
+			this.getPdfCoords().add(
+					// NEW PDFCOORDIANTE
+					new PDFCoordinate(
+							// GET THE EASTING OF THE ACTUAL POINT FOR THE X
+							// VALUE
+							(float) (this.getPolygon().getPoints().get(a).getEasting()),
+							// GET THE NORTHING OF THE ACTUAL POINT FOR THE Y
+							// VALUE
+							(float) (this.getPolygon().getPoints().get(a).getNorthing())));
+		}
 	}
 
 	// GETTERS AND SETTERS

@@ -1,7 +1,5 @@
 package iText;
 
-import com.lowagie.text.pdf.PdfPages;
-
 import resources.PdfPageSize;
 
 /**
