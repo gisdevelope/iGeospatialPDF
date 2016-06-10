@@ -54,47 +54,17 @@ public abstract class MapLayer {
 	/**
 	 * Prepares the stored data for displaying: Reduces, turns and scales the
 	 * data.
-	 * 
+	 *
+	 * @param northingRed
+	 *            the northing to reduce about
+	 * @param eastingRed
+	 *            the easting to reduce about
 	 * @param angle
 	 *            the angle to turn about in radiant
 	 * @param factor
 	 *            the factor to scale with
-	 * @param northing
-	 *            the northing to reduce about
-	 * @param easting
-	 *            the easting to reduce about
 	 */
-	public void prepareData(double northing, double easting, double angle, double factor) {
-		this.reduceData(northing, easting);
-		this.turnData(angle);
-		this.scaleData(factor);
-	}
-
-	/**
-	 * Reduces the data about the given values in northing and easting.
-	 *
-	 * @param northing
-	 *            the northing to reduce about
-	 * @param easting
-	 *            the easting to reduce about
-	 */
-	abstract void reduceData(double northing, double easting);
-
-	/**
-	 * Turns the data about the given angle in radiant as {@link Double}.
-	 *
-	 * @param angle
-	 *            the angle to turn about
-	 */
-	abstract void turnData(double angle);
-
-	/**
-	 * Scales the data with the given factor.
-	 *
-	 * @param factor
-	 *            the factor to scale with
-	 */
-	abstract void scaleData(double factor);
+	public abstract void prepareData(double northingRed, double eastingRed, double angle, double factor);
 
 	// GETTERS AND SETTERS
 

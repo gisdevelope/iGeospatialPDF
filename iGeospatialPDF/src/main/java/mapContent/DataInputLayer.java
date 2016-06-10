@@ -45,32 +45,11 @@ public class DataInputLayer extends MapLayer {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see mapContent.MapLayer#reduceData(double, double)
+	 * @see mapContent.MapLayer#prepareData(double, double, double, double,
+	 * double, double)
 	 */
 	@Override
-	void reduceData(double northing, double easting) {
-		// TODO Auto-generated method stub
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see mapContent.MapLayer#turnData(double)
-	 */
-	@Override
-	void turnData(double angle) {
-		// TODO Auto-generated method stub
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see mapContent.MapLayer#scaleData(double)
-	 */
-	@Override
-	void scaleData(double factor) {
+	public void prepareData(double northingRed, double eastingRed, double angle, double factor) {
 		// TODO Auto-generated method stub
 
 	}

@@ -182,32 +182,12 @@ public class WfsLayer extends MapLayer {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see mapContent.MapLayer#reduceData(double, double)
+	 * @see mapContent.MapLayer#prepareData(double, double, double, double,
+	 * double, double)
 	 */
 	@Override
-	void reduceData(double northing, double easting) {
-		// TODO Auto-generated method stub
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see mapContent.MapLayer#turnData(double)
-	 */
-	@Override
-	void turnData(double angle) {
-		// TODO WEITERGEBEN AN DIE UNTERELEMENTE
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see mapContent.MapLayer#scaleData(double)
-	 */
-	@Override
-	void scaleData(double factor) {
-		// TODO WEITERGEBEN AN DIE UNTERELEMENTE
+	public void prepareData(double northingRed, double eastingRed, double angle, double factor) {
+		this.getCollection().prepareData(northingRed, eastingRed, angle, factor);
 	}
 
 	// GETTERS AND SETTERS

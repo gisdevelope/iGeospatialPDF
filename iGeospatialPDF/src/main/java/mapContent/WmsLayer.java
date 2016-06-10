@@ -163,37 +163,6 @@ public class WmsLayer extends MapLayer {
 		// this.putOutImage("string");
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see mapContent.MapLayer#reduceData(double, double)
-	 */
-	@Override
-	void reduceData(double northing, double easting) {
-		// TODO Auto-generated method stub
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see mapContent.MapLayer#turnData(double)
-	 */
-	@Override
-	void turnData(double angle) {
-		// TODO Auto-generated method stub
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see mapContent.MapLayer#scaleData(double)
-	 */
-	@Override
-	void scaleData(double factor) {
-		// TODO Auto-generated method stub
-	}
-
 	/**
 	 * Saves an image to the file system.
 	 * 
@@ -552,6 +521,19 @@ public class WmsLayer extends MapLayer {
 
 		// SET IMAGE
 		t.setTileImage(b_img);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see mapContent.MapLayer#prepareData(double, double, double, double,
+	 * double, double)
+	 */
+	@Override
+	public void prepareData(double northingRed, double eastingRed, double angle, double factor) {
+		// TODO HIER DIE VARIABLE BEFUELLEN, ANHAND DERER DAS KARTENBILD GEDREHT
+		// WIRD!
+
 	}
 
 	// GETTERS AND SETTERS

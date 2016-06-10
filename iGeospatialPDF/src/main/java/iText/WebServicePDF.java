@@ -131,9 +131,13 @@ public class WebServicePDF extends GeospatialPDF {
 					// this.getLayers().get(a)).getCollection().getDrawer())
 					// .setStyle(((WfsLayer)
 					// this.getLayers().get(a)).getStyle());
+					
+					// TODO : PREPARE DATA AUFRUFEN?!
 
-					((WfsLayer) this.getLayers().get(a)).prepareData(this.getBbox().getDownLeft().getNorthing(),
-							this.getBbox().getDownLeft().getEasting(), angle, factor);
+					// ((WfsLayer)
+					// this.getLayers().get(a)).prepareData(this.getBbox().getDownLeft().getNorthing(),
+					// this.getBbox().getDownLeft().getEasting(), angle,
+					// factor);
 
 					contByte.beginLayer(
 							new PdfLayer("Polygons: " + ((WfsLayer) this.getLayers().get(a)).getLink(), getWriter()));
