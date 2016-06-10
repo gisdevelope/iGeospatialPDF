@@ -8,6 +8,7 @@ import draw.DrawElement;
 import geo.LineString;
 import geo.Polygon;
 import resources.PdfCoordinate;
+import resources.PdfCoordinateCalculator;
 
 /**
  * Class to represent a PDF-printable {@link LineString}. This class extends the
@@ -71,10 +72,7 @@ public class DrawLineString extends DrawElement {
 	public void reduce(double northing, double easting) {
 		// FOR ALL STORED PDFCOORDINATES
 		for (int a = 0; a < this.getPdfCoords().size(); a++) {
-			// REDURCE THE X BY THE GIVEN EASTING
-			this.getPdfCoords().get(a).setX((float) (this.getPdfCoords().get(a).getX() - easting));
-			// REDURCE THE Y BY THE GIVEN NORTHING
-			this.getPdfCoords().get(a).setY((float) (this.getPdfCoords().get(a).getY() - northing));
+			PdfCoordinateCalculator.getInstance().redurce(this.getPdfCoords().get(a), northing, easting);
 		}
 	}
 
@@ -85,7 +83,10 @@ public class DrawLineString extends DrawElement {
 	 */
 	@Override
 	public void turn(double angle) {
-		// TODO Auto-generated method stub
+		// FOR ALL STORED PDFCOORDINATES
+		for (int a = 0; a < this.getPdfCoords().size(); a++) {
+			PdfCoordinateCalculator.getInstance().turn(this.getPdfCoords().get(a), 0, 0, angle);
+		}
 	}
 
 	/*
@@ -97,9 +98,7 @@ public class DrawLineString extends DrawElement {
 	public void scale(double factor) {
 		// FOR ALL STORED PDFCOORDINATES
 		for (int a = 0; a < this.getPdfCoords().size(); a++) {
-			PdfCoordinate temp = this.getPdfCoords().get(a);
-			temp.setX((float) (temp.getX() * factor));
-			temp.setY((float) (temp.getY() * factor));
+			PdfCoordinateCalculator.getInstance().scale(this.getPdfCoords().get(a), factor);
 		}
 	}
 

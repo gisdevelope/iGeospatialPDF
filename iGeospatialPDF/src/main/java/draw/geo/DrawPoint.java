@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import draw.DrawElement;
 import geo.Point2D;
 import resources.PdfCoordinate;
+import resources.PdfCoordinateCalculator;
 
 /**
  * Class to represent a PDF-printable {@link Point2D}. This class extends the
@@ -65,10 +66,7 @@ public class DrawPoint extends DrawElement {
 	 */
 	@Override
 	public void reduce(double northing, double easting) {
-		// REDUCE THE X BY THE GIVEN EASTING
-		this.getPdfCoord().setX((float) (this.getPdfCoord().getX() - easting));
-		// REDUCE THE Y BY THE GIVEN NORTHING
-		this.getPdfCoord().setY((float) (this.getPdfCoord().getY() - northing));
+		PdfCoordinateCalculator.getInstance().redurce(this.getPdfCoord(), northing, easting);
 	}
 
 	/*
@@ -78,7 +76,7 @@ public class DrawPoint extends DrawElement {
 	 */
 	@Override
 	public void turn(double angle) {
-		// TODO Auto-generated method stub
+		PdfCoordinateCalculator.getInstance().turn(this.getPdfCoord(), 0, 0, angle);
 	}
 
 	/*
@@ -88,10 +86,7 @@ public class DrawPoint extends DrawElement {
 	 */
 	@Override
 	public void scale(double factor) {
-		// SCALE THE X VALUE WITH THE FACTOR
-		this.getPdfCoord().setX((float) (this.getPdfCoord().getX() * factor));
-		// SCALE THE Y VALUE WITH THE FACTOR
-		this.getPdfCoord().setY((float) (this.getPdfCoord().getY() * factor));
+		PdfCoordinateCalculator.getInstance().scale(this.getPdfCoord(), factor);
 	}
 
 	/*

@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import draw.DrawElement;
 import geo.Polygon;
 import resources.PdfCoordinate;
+import resources.PdfCoordinateCalculator;
 
 /**
  * Class to represent a PDF-printable {@link Polygon}. This class extends the
@@ -69,12 +70,9 @@ public class DrawPolygon extends DrawElement {
 	 */
 	@Override
 	public void reduce(double northing, double easting) {
-		// FOR ALL STORED PDFCOORDIANTES
+		// FOR ALL STORED PDFCOORDINATES
 		for (int a = 0; a < this.getPdfCoords().size(); a++) {
-			// REDUCE THE X BY THE GIVEN EASTING
-			this.getPdfCoords().get(a).setX((float) (this.getPdfCoords().get(a).getX() - easting));
-			// REDUCE THE Y BY THE GIVEN NORTHING
-			this.getPdfCoords().get(a).setY((float) (this.getPdfCoords().get(a).getY() - northing));
+			PdfCoordinateCalculator.getInstance().redurce(this.getPdfCoords().get(a), northing, easting);
 		}
 	}
 
@@ -85,7 +83,10 @@ public class DrawPolygon extends DrawElement {
 	 */
 	@Override
 	public void turn(double angle) {
-		// TODO Auto-generated method stub
+		// FOR ALL STORED PDFCOORDINATES
+		for (int a = 0; a < this.getPdfCoords().size(); a++) {
+			PdfCoordinateCalculator.getInstance().turn(this.getPdfCoords().get(a), 0, 0, angle);
+		}
 	}
 
 	/*
@@ -95,12 +96,9 @@ public class DrawPolygon extends DrawElement {
 	 */
 	@Override
 	public void scale(double factor) {
-		// FOR ALL STORED PDFCOORDIANTES
+		// FOR ALL STORED PDFCOORDINATES
 		for (int a = 0; a < this.getPdfCoords().size(); a++) {
-			// SCALE THE X WITH THE GIVEN FACTOR
-			this.getPdfCoords().get(a).setX((float) (this.getPdfCoords().get(a).getX() * factor));
-			// SCALE THE Y WITH THE GIVEN FACTOR
-			this.getPdfCoords().get(a).setY((float) (this.getPdfCoords().get(a).getY() * factor));
+			PdfCoordinateCalculator.getInstance().scale(this.getPdfCoords().get(a), factor);
 		}
 	}
 

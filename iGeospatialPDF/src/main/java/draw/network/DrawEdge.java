@@ -32,10 +32,10 @@ public class DrawEdge extends DrawElement {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see draw.DrawElement#turn(double)
+	 * @see draw.DrawElement#scale(double)
 	 */
 	@Override
-	public void turn(double angle) {
+	public void scale(double factor) {
 		// TODO Auto-generated method stub
 
 	}
@@ -43,10 +43,10 @@ public class DrawEdge extends DrawElement {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see draw.DrawElement#scale(double)
+	 * @see draw.DrawElement#turn(double, double, double)
 	 */
 	@Override
-	public void scale(double factor) {
+	protected void turn(double angle) {
 		// TODO Auto-generated method stub
 
 	}
@@ -60,9 +60,8 @@ public class DrawEdge extends DrawElement {
 	public void convertToPdfSystem() {
 		// TODO Auto-generated method stub
 
+		// GETTERS AND SETTERS
+
+		// OTHERS
 	}
-
-	// GETTERS AND SETTERS
-
-	// OTHERS
 }

@@ -32,17 +32,6 @@ public class DrawNode extends DrawElement {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see draw.DrawElement#turn(double)
-	 */
-	@Override
-	public void turn(double angle) {
-		// TODO Auto-generated method stub
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see draw.DrawElement#scale(double)
 	 */
 	@Override
@@ -58,6 +47,17 @@ public class DrawNode extends DrawElement {
 	 */
 	@Override
 	public void convertToPdfSystem() {
+		// TODO Auto-generated method stub
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see draw.DrawElement#turn(double, double, double)
+	 */
+	@Override
+	protected void turn(double angle) {
 		// TODO Auto-generated method stub
 
 	}
