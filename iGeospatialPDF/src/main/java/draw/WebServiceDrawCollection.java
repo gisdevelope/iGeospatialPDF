@@ -71,21 +71,76 @@ public class WebServiceDrawCollection extends DrawCollection {
 
 	// METHODS
 
-	/**
-	 * Adds a {@link DrawElement} to the {@link DrawCollection}.
-	 *
-	 * @param de
-	 *            the {@link DrawElement} to add
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see draw.DrawCollection#prepareData(double, double, double, double)
 	 */
-	public void addDrawElement(DrawElement de) {
+	@Override
+	public void prepareData(double northingRed, double eastingRed, double angle, double factor) {
+		// THE DRAW OBJECTS KNOW HOW TO REDUCE, TURN AND SCALE THEM. SO USE THIS
+		// METHODS HERE.
+		// REDURCE THE POLYGONS
+		for (int a = 0; a < this.getPolygons().size(); a++) {
+			this.getPolygons().get(a).reduce(northingRed, eastingRed);
+		}
+		// REDUCE THE LINESTRINGS
+		for (int a = 0; a < this.getLinestrings().size(); a++) {
+			this.getLinestrings().get(a).reduce(northingRed, eastingRed);
+		}
+		// REDUCE THE POINTS
+		for (int a = 0; a < this.getPoints().size(); a++) {
+			this.getPoints().get(a).reduce(northingRed, eastingRed);
+		}
+
+		// TURN THE POLYGONS
+		for (int a = 0; a < this.getPolygons().size(); a++) {
+			this.getPolygons().get(a).turn(angle);
+		}
+		// TURN THE LINESTRINGS
+		for (int a = 0; a < this.getLinestrings().size(); a++) {
+			this.getLinestrings().get(a).turn(angle);
+		}
+		// TURN THE POINTS
+		for (int a = 0; a < this.getPoints().size(); a++) {
+			this.getPoints().get(a).turn(angle);
+		}
+
+		// SCALE THE POLYGONS
+		for (int a = 0; a < this.getPolygons().size(); a++) {
+			this.getPolygons().get(a).scale(factor);
+		}
+		// SCALE THE LINESTRINGS
+		for (int a = 0; a < this.getLinestrings().size(); a++) {
+			this.getLinestrings().get(a).scale(factor);
+		}
+		// SCALE THE POINTS
+		for (int a = 0; a < this.getPoints().size(); a++) {
+			this.getPoints().get(a).scale(factor);
+		}
+		// TODO Auto-generated method stub
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see draw.DrawCollection#addDrawElement(draw.DrawElement)
+	 */
+	@Override
+	public boolean addDrawElement(DrawElement de) {
 		if (de.getClass().equals(DrawPoint.class)) {
 			this.getPoints().add((DrawPoint) de);
+			return true;
 		} else if (de.getClass().equals(DrawLineString.class)) {
 			this.getLinestrings().add((DrawLineString) de);
+			return true;
 		} else if (de.getClass().equals(DrawPolygon.class)) {
 			this.getPolygons().add((DrawPolygon) de);
+			return true;
 		} else
 			LOG.warning("ELEMENT TO ADD CAN NOT BE ADDED TO THIS WEB SERVICE DRAW COLLECTION");
+		return false;
 	}
 
 	// OVERWRITTEN GETTERS AND SETTERS
