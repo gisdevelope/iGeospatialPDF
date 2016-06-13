@@ -25,7 +25,7 @@ public class DrawEdge extends DrawElement {
 	 */
 	@Override
 	public void reduce(double northing, double easting) {
-		// TODO Auto-generated method stub
+		// TODO : REDUCE FUNKTION DER DRAWEDGE IMPLEMENTIEREN
 
 	}
 
@@ -36,7 +36,7 @@ public class DrawEdge extends DrawElement {
 	 */
 	@Override
 	public void scale(double factor) {
-		// TODO Auto-generated method stub
+		// TODO : SCALE FUNKTION DER DRAW EDGE IMPLEMENTIEREN
 
 	}
 
@@ -47,7 +47,7 @@ public class DrawEdge extends DrawElement {
 	 */
 	@Override
 	protected void turn(double angle) {
-		// TODO Auto-generated method stub
+		// TODO : TURN FUNKTION DER DRAW EDGE IMPLEMENTIEREN
 
 	}
 
@@ -58,10 +58,10 @@ public class DrawEdge extends DrawElement {
 	 */
 	@Override
 	public void convertToPdfSystem() {
-		// TODO Auto-generated method stub
-
-		// GETTERS AND SETTERS
-
-		// OTHERS
+		// TODO : CONVERT TO PDF SYSTEM DER DRAW EDGE IMPLEMENTIEREN
 	}
+
+	// GETTERS AND SETTERS
+
+	// OTHERS
 }

@@ -14,9 +14,9 @@ import com.lowagie.text.pdf.PdfName;
 import com.lowagie.text.pdf.PdfStructureElement;
 import com.lowagie.text.pdf.PdfStructureTreeRoot;
 
-import mapContent.DataInputLayer;
-import mapContent.WfsLayer;
-import mapContent.WmsLayer;
+import mapContent.layers.ReferencedLayer;
+import mapContent.layers.WfsLayer;
+import mapContent.layers.WmsLayer;
 import resources.PdfPageSize;
 
 /**
@@ -67,11 +67,23 @@ public class WebServicePDF extends GeospatialPDF {
 			// PREPARE TO DRAW DIRECTLY TO THE PDF
 			PdfContentByte contByte = getWriter().getDirectContent();
 
+			// TODO : DA DIE DPI ZAHL NICHT DER DES EIGENTLICHEN KARTENBILDES
+			// ENTSPRICHT MUSS DIESES KLEINE KARTENBILD MIT EINER ANDEREN
+			// METHODE SKALIERT WERDEN, UM GENAU SO GROSS ZU WERDEN WIE DIE
+			// SEITE...
+
+			ReferencedLayer refLayer = new ReferencedLayer(this.getMasterBbox(), this.getPageWidth(),
+					this.getPageHeight());
+			this.getLayers().add(0, refLayer);
+
 			// THE STRUCTURE TREE ROOT
 			PdfStructureTreeRoot tree = this.getWriter().getStructureTreeRoot();
 
 			// EXTRACT THE STRUCTURE ELEMENT TOP
 			PdfStructureElement top = new PdfStructureElement(tree, new PdfName("WFS-Data"));
+
+			// TODO : WMS LAYER IN DEN HINTERGRUND EINFUEGEN, DER DIE
+			// GEOREFFERENZIERUNG ENTHAELT
 
 			for (int a = 0; a < this.getLayers().size(); a++) {
 
@@ -81,8 +93,32 @@ public class WebServicePDF extends GeospatialPDF {
 
 				this.getLayers().get(a).receive();
 
-				// IF THE LAYER IS A WMS LAYER
-				if (this.getLayers().get(a) instanceof WmsLayer) {
+				// IF THE LAYER IS A REFERENCED LAYER (FIRST LAYER WILL ALWAYS
+				// BE)
+				if (this.getLayers().get(a) instanceof ReferencedLayer) {
+					LOG.info("THIS LAYER IS A REFERENCED-LAYER");
+					LOG.info("THIS LAYER DOES NOT HAVE A PDF-LAYER");
+
+					// CREATE BUFFERED IMAGE OF THE MAP IMAGE
+					BufferedImage buff = ((ReferencedLayer) (this.getLayers().get(a))).getMapImage();
+
+					// CREATE ITEXT IMAGE
+					Image img = Image.getInstance(buff, null);
+
+					// SET THE ABSOLUTE POSITION OF THE IMAGE (NEEDED)
+					img.setAbsolutePosition(0, 0);
+
+					// SCALE THE IMAGE
+					this.scaleReferencedImage(img);
+
+					// ADD THE GEOREFFERECING INFORMATION TO THE IMAGE
+					this.addGeoreferencing(img, ((ReferencedLayer) (this.getLayers().get(a))).getBbox());
+
+					// ADD THE IMAGE TO THE PAGE
+					contByte.addImage(img);
+				}
+				// ELSE IF THE LAYER IS A WMS LAYER
+				else if (this.getLayers().get(a) instanceof WmsLayer) {
 
 					LOG.info("THIS LAYER IS A WMS-LAYER");
 					LOG.info("BEGINING THE PDF-LAYER OF THE WMS-LAYER");
@@ -104,7 +140,8 @@ public class WebServicePDF extends GeospatialPDF {
 					this.scaleImage(img);
 
 					// ADD THE GEOREFFERECING INFORMATION TO THE IMAGE
-					this.addGeoreferencing(img, ((WmsLayer) (this.getLayers().get(a))).getBbox());
+					// this.addGeoreferencing(img, ((WmsLayer)
+					// (this.getLayers().get(a))).getBbox());
 
 					// ADD THE IMAGE TO THE PAGE
 					contByte.addImage(img);
@@ -121,23 +158,13 @@ public class WebServicePDF extends GeospatialPDF {
 					LOG.info("THIS LAYER IS A WFS-LAYER");
 
 					// TODO : DAS MUSS SPAETER UEBERGEBEN WERDEN!
-					double angle = 0;
-					double factor = 0;
+					double angle = 0.0;
+					double factor = 1.0;
 
-					// TODO WO IST DIE STYLE UEBERGABE?
 					((WfsLayer) this.getLayers().get(a)).getCollection().getDrawer().setContByte(contByte);
 					((WfsLayer) this.getLayers().get(a)).getCollection().getDrawer().setTop(top);
-					// ((WebServiceDrawer) ((WfsLayer)
-					// this.getLayers().get(a)).getCollection().getDrawer())
-					// .setStyle(((WfsLayer)
-					// this.getLayers().get(a)).getStyle());
-					
-					// TODO : PREPARE DATA AUFRUFEN?!
-
-					// ((WfsLayer)
-					// this.getLayers().get(a)).prepareData(this.getBbox().getDownLeft().getNorthing(),
-					// this.getBbox().getDownLeft().getEasting(), angle,
-					// factor);
+					((WfsLayer) this.getLayers().get(a)).setAngle(angle);
+					((WfsLayer) this.getLayers().get(a)).setFactor(factor);
 
 					contByte.beginLayer(
 							new PdfLayer("Polygons: " + ((WfsLayer) this.getLayers().get(a)).getLink(), getWriter()));
@@ -161,12 +188,6 @@ public class WebServicePDF extends GeospatialPDF {
 					contByte.endLayer();
 
 				}
-				// ELSE IF THE LAYER IS A DATAINPUT LAYER
-				else if (this.getLayers().get(a) instanceof DataInputLayer) {
-
-					LOG.info("THIS LAYER IS A DATAINPUT-LAYER");
-					// TODO : FILL
-				}
 				// ELSE THE LAYER KIND IS NOT SUPPORTED IN A WEB SERVICE PDF
 				else {
 					LOG.severe("LAYER NOT SUPPORTED IN A WEBSERVICE-PDF");
@@ -174,11 +195,10 @@ public class WebServicePDF extends GeospatialPDF {
 
 				LOG.info("CLOSING THE DOCUMENT");
 
-				// CLOSE THE DOCUMENT TO STOP EDITING AND GIVE IT FREE IN THE
-				// FILE SYSTEM
-				this.getDoc().close();
-
 			}
+			// CLOSE THE DOCUMENT TO STOP EDITING AND GIVE IT FREE IN THE
+			// FILE SYSTEM
+			this.getDoc().close();
 		} catch (DocumentException | IOException e) {
 			e.printStackTrace();
 			LOG.severe("ERROR WHILE CREATING PDF DOCUMENT!");
@@ -192,6 +212,7 @@ public class WebServicePDF extends GeospatialPDF {
 	 * @param img
 	 */
 	private void scaleImage(Image img) {
+
 		// CALCULATE THE PAGE SIZE TO FIT THE IMAGE TO
 		float pageDotsWidth = this.getPageWidth() * 72;
 		float pageDotsHeight = this.getPageHeight() * 72;
@@ -210,6 +231,107 @@ public class WebServicePDF extends GeospatialPDF {
 
 		// img.scaleToFit(this.getPageWidth() * 72, this.getPageHeight() * 72);
 		LOG.info("SCALED THE IMAGE OF THE LAYER TO WIDTH = " + img.getWidth() + ", HEIGHT = " + img.getHeight());
+	}
+
+	/**
+	 * TODO
+	 *
+	 * @param img
+	 */
+	private void scaleReferencedImage(Image img) {
+		// CALCULATE THE PAGE SIZE TO FIT THE IMAGE TO
+		float pageDotsWidth = this.getPageWidth() * 72;
+		float pageDotsHeight = this.getPageHeight() * 72;
+
+		// TODO : BILD AN DIE SEITENGROESSE ANPASSEN
+
+		// MASTER BOUNDINGBOX HOCHKANT
+		if (this.getMasterBbox().getWidthGeo() < this.getMasterBbox().getHeightGeo()) {
+			// SEITE HOCHKANT
+			if (this.getPageWidth() < this.getPageHeight()) {
+				// CALCUALTE THE FACTOR
+				float factor = pageDotsWidth / img.getPlainWidth();
+				// SCALE THE IMAGE
+				img.scaleAbsolute(img.getPlainWidth() * factor, img.getPlainHeight() * factor);
+				// IMAGE STILL NOT HEIGHER AS THE PAGE
+				if (img.getPlainHeight() < pageDotsHeight) {
+					// OKAY
+				}
+				// ELSE THE IMAGE IS HIGHER THAN THE PAGE
+				else {
+					// CALCUALTE THE FACTOR
+					factor = pageDotsHeight / img.getPlainHeight();
+					// SCALE THE IMAGE
+					img.scaleAbsolute(img.getPlainWidth() * factor, img.getPlainHeight() * factor);
+				}
+			}
+			// SEITE QUER
+			else if (this.getPageWidth() > this.getPageHeight()) {
+				// CALCUALTE THE FACTOR
+				float factor = pageDotsHeight / img.getPlainHeight();
+				// SCALE THE IMAGE
+				img.scaleAbsolute(img.getPlainWidth() * factor, img.getHeight() * factor);
+				// IMAGE STILL NOT AS LARGE AS THE PAGE
+				if (img.getPlainWidth() < pageDotsWidth) {
+					// OKAY
+				}
+				// ELSE THE IMAGE IS LARGER THANT THE PAGE
+				else {
+					factor = pageDotsWidth / img.getPlainWidth();
+					// SCALE THE IMAGE
+					img.scaleAbsolute(img.getPlainWidth() * factor, img.getPlainHeight() * factor);
+				}
+			}
+		}
+		// MASTER BOUNDINGBOX QUER
+		else if (this.getMasterBbox().getWidthGeo() > this.getMasterBbox().getHeightGeo()) {
+			// SEITE HOCHKANT
+			if (this.getPageWidth() < this.getPageHeight()) {
+				// CALCUALTE THE FACTOR
+				float factor = pageDotsWidth / img.getPlainWidth();
+				// SCALE THE IMAGE
+				img.scaleAbsolute(img.getPlainWidth() * factor, img.getPlainHeight() * factor);
+				// IMAGE STILL NOT HEIGHER AS THE PAGE
+				if (img.getPlainHeight() < pageDotsHeight) {
+					// OKAY
+				}
+				// ELSE THE IMAGE IS HIGHER THAN THE PAGE
+				else {
+					// CALCUALTE THE FACTOR
+					factor = pageDotsHeight / img.getPlainHeight();
+					// SCALE THE IMAGE
+					img.scaleAbsolute(img.getPlainWidth() * factor, img.getPlainHeight() * factor);
+				}
+			}
+			// SEITE QUER
+			else if (this.getPageWidth() > this.getPageHeight()) {
+				// CALCUALTE THE FACTOR
+				float factor = pageDotsHeight / img.getPlainHeight();
+				// SCALE THE IMAGE
+				img.scaleAbsolute(img.getPlainWidth() * factor, img.getPlainHeight() * factor);
+				// IMAGE STILL NOT AS LARGE AS THE PAGE
+				if (img.getPlainWidth() < pageDotsWidth) {
+					// OKAY
+				}
+				// ELSE THE IMAGE IS LARGER THANT THE PAGE
+				else {
+					factor = pageDotsWidth / img.getPlainWidth();
+					// SCALE THE IMAGE
+					img.scaleAbsolute(img.getWidth() * factor, img.getHeight() * factor);
+				}
+			}
+		}
+		// MASTER BOUNDINGBOX QUADRATISCH
+		else if (this.getMasterBbox().getWidthGeo() == this.getMasterBbox().getHeightGeo()) {
+			// SEITE HOCHKANT
+			if (this.getPageWidth() < this.getPageHeight()) {
+
+			}
+			// SEITE QUER
+			else if (this.getPageWidth() > this.getPageHeight()) {
+
+			}
+		}
 	}
 
 	// METHODS

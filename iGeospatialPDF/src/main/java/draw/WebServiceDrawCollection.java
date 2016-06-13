@@ -84,23 +84,28 @@ public class WebServiceDrawCollection extends DrawCollection {
 		for (int a = 0; a < this.getPolygons().size(); a++) {
 			this.getPolygons().get(a).reduce(northingRed, eastingRed);
 		}
+		
 		// REDUCE THE LINESTRINGS
 		for (int a = 0; a < this.getLinestrings().size(); a++) {
 			this.getLinestrings().get(a).reduce(northingRed, eastingRed);
 		}
+		
 		// REDUCE THE POINTS
 		for (int a = 0; a < this.getPoints().size(); a++) {
 			this.getPoints().get(a).reduce(northingRed, eastingRed);
 		}
+	
 
 		// TURN THE POLYGONS
 		for (int a = 0; a < this.getPolygons().size(); a++) {
 			this.getPolygons().get(a).turn(angle);
 		}
+		
 		// TURN THE LINESTRINGS
 		for (int a = 0; a < this.getLinestrings().size(); a++) {
 			this.getLinestrings().get(a).turn(angle);
 		}
+		
 		// TURN THE POINTS
 		for (int a = 0; a < this.getPoints().size(); a++) {
 			this.getPoints().get(a).turn(angle);
@@ -118,8 +123,7 @@ public class WebServiceDrawCollection extends DrawCollection {
 		for (int a = 0; a < this.getPoints().size(); a++) {
 			this.getPoints().get(a).scale(factor);
 		}
-		// TODO Auto-generated method stub
-
+		
 	}
 
 	/*

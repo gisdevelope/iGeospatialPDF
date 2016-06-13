@@ -1,5 +1,6 @@
 package geo;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import coordinateSystems.CoordinateSystem;
@@ -79,6 +80,8 @@ public class BoundingBox {
 	 */
 	public BoundingBox(Point2D downLeft, Point2D upRight, CoordinateSystem system) {
 		super();
+		
+		LOG.setLevel(Level.SEVERE);
 
 		this.downLeft = downLeft;
 		LOG.info("LOWER LEFT POINT2D SET");
@@ -125,18 +128,10 @@ public class BoundingBox {
 		this.setWidthGeo(new GeoCalculator().calcDistance(downLeft, downRight));
 		LOG.info("CALCULATED WIDTH");
 
-		// TODO : NACH DEN JUNIT TESTS DAS AUSKOMMENTIERTE RAUS WERFEN
-
 		LOG.info("LOWER RIGHT POINT2D SET");
 		this.setCenter(new Point2D( // NEW POINT
-				// this.getDownLeft().getNorthing()
-				// + (this.getDownLeft().getNorthing() -
-				// this.getUpRight().getNorthing()) / 2,
 				// LOWER LEFT NORTHING + BOUNDINGBOXHEIGHT / 2
 				this.getDownLeft().getNorthing() + this.getHeightGeo() / 2,
-				// this.getDownLeft().getEasting()
-				// + (this.getDownLeft().getEasting() -
-				// this.getUpRight().getEasting()) / 2,
 				// LOWER LEFT EASTING + BOUNDINGBOXWIDTH / 2
 				this.getDownLeft().getEasting() + this.getWidthGeo() / 2,
 				// LOWER LEFT COORDINATE SYSTEM
@@ -145,7 +140,7 @@ public class BoundingBox {
 		LOG.info("FINISHED: ALL OTHER VALUES WERE CALCUALTED");
 	}
 
-	// TODO : SIND DIE HIER NICHT IN DEN VERSIONEN UNTERSCHIEDLICH?!
+	// TODO : UEBERARBEITEN DA SO NICHT IN ALLEN VERSIONEN RICHTIG
 	/**
 	 * Returns the parameters of the lower left and the upper right
 	 * {@link Point2D} in the correct way for a given WMS or WFS request.
@@ -164,7 +159,7 @@ public class BoundingBox {
 			erg = "" + this.getDownLeft().getEasting() + "," + this.getDownLeft().getNorthing() + ","
 					+ this.getUpRight().getEasting() + "," + this.getUpRight().getNorthing();
 			// RETURN STRING
-			LOG.info("RETURNING CORNER VALUES FOR SERVER VERSIO N1.1.0");
+			LOG.info("RETURNING CORNER VALUES FOR SERVER VERSION 1.1.0");
 			return erg;
 		}
 		// FOR SERVER VERSION 1.3.0
@@ -174,7 +169,25 @@ public class BoundingBox {
 			erg = "" + this.getDownLeft().getEasting() + "," + this.getDownLeft().getNorthing() + ","
 					+ this.getUpRight().getEasting() + "," + this.getUpRight().getNorthing();
 			// RETURN STRING
-			LOG.info("RETURNING CORNER VALUES FOR SERVER VERSIO N1.3.0");
+			LOG.info("RETURNING CORNER VALUES FOR SERVER VERSION 1.3.0");
+			return erg;
+		} // FOR SERVER VERSION WFS_1_0_0
+		else if (version.toString().equals(ServerVersion.WFS_V_1_0_0.toString())) {
+			LOG.info("DETECTED SERVER VERSION WFS_1_0_0");
+			// PUT THE STRING TOGETHER : EASTRING, NORTHING, EASTING NORTHING
+			erg = "" + this.getDownLeft().getEasting() + "," + this.getDownLeft().getNorthing() + ","
+					+ this.getUpRight().getEasting() + "," + this.getUpRight().getNorthing();
+			// RETURN STRING
+			LOG.info("RETURNING CORNER VALUES FOR SERVER VERSION WFS_1_0_0");
+			return erg;
+		} // FOR SERVER VERSION WFS_1_1_0
+		else if (version.toString().equals(ServerVersion.WFS_V_1_1_0.toString())) {
+			LOG.info("DETECTED SERVER VERSION WFS_1_1_0");
+			// PUT THE STRING TOGETHER : EASTRING, NORTHING, EASTING NORTHING
+			erg = "" + this.getDownLeft().getEasting() + "," + this.getDownLeft().getNorthing() + ","
+					+ this.getUpRight().getEasting() + "," + this.getUpRight().getNorthing();
+			// RETURN STRING
+			LOG.info("RETURNING CORNER VALUES FOR SERVER VERSION WFS_1_1_0");
 			return erg;
 		}
 		// SERVER VERSION NOT SUPPORTED

@@ -1,4 +1,4 @@
-package mapContent;
+package mapContent.layers;
 
 import java.util.logging.Logger;
 

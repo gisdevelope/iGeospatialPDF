@@ -24,7 +24,7 @@ import com.lowagie.text.pdf.PdfWriter;
 import draw.DrawElement;
 import draw.drawer.Drawer;
 import geo.BoundingBox;
-import mapContent.MapLayer;
+import mapContent.layers.MapLayer;
 import resources.PdfPageSize;
 
 /**
@@ -64,7 +64,7 @@ public abstract class GeospatialPDF {
 	/**
 	 * The "over all" {@link BoundingBox} of the PDF-document.
 	 */
-	private BoundingBox bbox;
+	private BoundingBox masterBbox;
 
 	/**
 	 * The width of the page to crate in inch as {@link Float}.
@@ -361,8 +361,8 @@ public abstract class GeospatialPDF {
 	 *
 	 * @return the bbox as {@link BoundingBox}
 	 */
-	public BoundingBox getBbox() {
-		return bbox;
+	public BoundingBox getMasterBbox() {
+		return masterBbox;
 	}
 
 	/**
@@ -371,8 +371,8 @@ public abstract class GeospatialPDF {
 	 * @param bbox
 	 *            the bbox to set
 	 */
-	public void setBbox(BoundingBox bbox) {
-		this.bbox = bbox;
+	public void setMasterBbox(BoundingBox bbox) {
+		this.masterBbox = bbox;
 	}
 
 	/**

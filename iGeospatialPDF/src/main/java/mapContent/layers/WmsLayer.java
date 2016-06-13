@@ -1,4 +1,4 @@
-package mapContent;
+package mapContent.layers;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -511,7 +511,8 @@ public class WmsLayer extends MapLayer {
 		Graphics2D graphics = b_img.createGraphics();
 
 		// SET THE PAINT COLOR
-		graphics.setPaint(new Color(255F, 185F, 185F, 255F / 2));
+		graphics.setPaint(new Color(254F / 2, 254F, 185F, 185F));
+//		graphics.setPaint(new Color(1.0f, 1.0f, 1.0f, 0.5f));
 
 		// DRAW A RECTANGLE OVER THE FULL IMAGE SIZE
 		graphics.fillRect(0, 0, b_img.getWidth(), b_img.getHeight());

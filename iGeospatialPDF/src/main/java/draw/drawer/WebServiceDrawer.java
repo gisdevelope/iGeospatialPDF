@@ -186,7 +186,7 @@ public class WebServiceDrawer extends Drawer {
 	 *            the {@link DrawPoint} to draw
 	 */
 	private void drawPoint2D(DrawPoint p) {
-		// CATCH IF THERE IS NO POLYGON
+		// CATCH IF THERE IS NO POINT
 		if (p == null) {
 			LOG.warning("CATCHED: DRAWPOINT IS NULL");
 			return;

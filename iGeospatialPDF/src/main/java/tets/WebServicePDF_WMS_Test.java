@@ -6,7 +6,7 @@ import coordinateSystems.EPSG25832;
 import geo.BoundingBox;
 import geo.Point2D;
 import iText.WebServicePDF;
-import mapContent.WmsLayer;
+import mapContent.layers.WmsLayer;
 import resources.PdfPageSize;
 import resources.ServerVersion;
 
@@ -17,7 +17,7 @@ import resources.ServerVersion;
  * @since 13.05.2016
  *
  */
-public class GeospatialPDFTest {
+public class WebServicePDF_WMS_Test {
 
 	/**
 	 * Runable main method.
@@ -37,7 +37,7 @@ public class GeospatialPDFTest {
 		BoundingBox bbox = new BoundingBox(new Point2D(5712125, 374676, epsg),
 				new Point2D(5712125 + 800, 374676 + 500, epsg), epsg);
 
-		pdf.setBbox(bbox);
+		pdf.setMasterBbox(bbox);
 
 		ArrayList<String> layer = new ArrayList<String>();
 		layer.add("nw_dtk10_col");

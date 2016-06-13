@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import geo.BoundingBox;
+import mapContent.layers.MapLayer;
 
 /**
  * Class to represent a completed {@link Map} with multiple {@link MapLayer}s.

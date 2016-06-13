@@ -10,8 +10,9 @@ import geo.LineString;
 import geo.Point2D;
 import geo.Polygon;
 import iText.WebServicePDF;
-import mapContent.WfsLayer;
+import mapContent.layers.WfsLayer;
 import resources.PdfPageSize;
+import resources.ServerVersion;
 
 /**
  * Class to test the drawing of geo-objects.
@@ -29,12 +30,21 @@ public class GeoDrawElementsTest {
 
 		BoundingBox bbox = new BoundingBox(new Point2D(0, 0, epsg), new Point2D(1000, 1000, epsg), epsg);
 
-		pdf.setBbox(bbox);
-		
+		pdf.setMasterBbox(bbox);
+
 		WebServiceStyle style = new WebServiceStyle(Color.BLACK, Color.BLUE, Color.CYAN, Color.BLACK, Color.CYAN, 1, 1,
 				1, false, false, null, 50, null);
 
-		WfsLayer layer1 = new WfsLayer(bbox);
+		ArrayList<String> layers = new ArrayList<>();
+		layers.add("contentLayer1");
+		layers.add("contentLayer2");
+		
+		ArrayList<Integer> maxFeatures = new ArrayList<>();
+		maxFeatures.add(100);
+		maxFeatures.add(400);
+
+		WfsLayer layer1 = new WfsLayer(bbox, ServerVersion.v_1_1_0, layers, maxFeatures, null);
+		
 		layer1.setStyle(style);
 
 		Point2D p1 = new Point2D(500, 500, new EPSG25832());

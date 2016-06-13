@@ -1,10 +1,12 @@
-package mapContent;
+package mapContent.layers;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import com.lowagie.text.pdf.PdfContentByte;
 
+import draw.DrawElement;
 import draw.WebServiceDrawCollection;
 import draw.drawer.WebServiceDrawer;
 import draw.geo.DrawLineString;
@@ -17,6 +19,7 @@ import geo.LineString;
 import geo.Point2D;
 import geo.Polygon;
 import resources.ServerVersion;
+import resources.XmlParser;
 
 /**
  * Class to represent a {@link WfsLayer} - a layer requested from a Web Feature
@@ -73,21 +76,109 @@ public class WfsLayer extends MapLayer {
 	 */
 	private WebServiceStyle style = new WebServiceStyle();
 
-	// CONSTRUCTORS
+	/**
+	 * The maximum requested features.
+	 */
+	private ArrayList<Integer> maxFeatures = new ArrayList<>();
 
 	/**
-	 * Constructor for a {@link WfsLayer} using a {@link BoundingBox}.
-	 * 
-	 * @param bbox
+	 * The angle to turn the {@link DrawElement}s about.
 	 */
-	public WfsLayer(BoundingBox bbox) {
+	private double angle = 0.0;
+
+	/**
+	 * The factor to scale the {@link DrawElement}s with.
+	 */
+	private double factor = 1.0;
+
+	// CONSTRUCTORS
+
+	public WfsLayer(String link, BoundingBox bbox, ServerVersion serverVersion, ArrayList<String> layers,
+			ArrayList<Integer> maxFeatures, WebServiceStyle style) {
 		super(bbox);
+		// UPDATE THE PARENTAL LOGGER
 		LOG = Logger.getLogger(this.getClass().getCanonicalName());
+
+		// SET THE LINK TO THE SERVER
+		this.setLink(link);
+
+		// SET THE SERVER VERSION
+		this.setVersion(serverVersion);
+
+		// SET THE LAYERS
+		this.setLayers(layers);
+
+		// ARRAYLIST STUFF
+		this.checkLayerNumber(layers, maxFeatures);
+
+		// STYLE STUFF
+		this.checkStyle(style);
+
+		// ALL WORK SHOULD BE DONE
 	}
 
-	// TODO : CONSTRUCTOR MIT WICHTIGEN ATTRIBUTEN
-
 	// METHODS
+
+	/**
+	 * Checks the given {@link WebServiceStyle}: If the given
+	 * {@link WebServiceStyle} is null a standard {@link WebServiceStyle} will
+	 * be used. If it is not null it will be used.
+	 *
+	 * @param s
+	 *            the {@link WebServiceStyle} to check
+	 */
+	private void checkStyle(WebServiceStyle s) {
+		// IF STYLE IS NOT NULL
+		if (s != null) {
+			// USE THE STYLE
+			this.setStyle(s);
+		} // ELSE DO NOTHING
+		else {
+			// USE STANDARD STYLE
+			this.setStyle(new WebServiceStyle());
+		}
+	}
+
+	/**
+	 * Checks if the two {@link ArrayList}s have the same size and equals the
+	 * maxFeatures {@link ArrayList} to the layers {@link ArrayList} if not.
+	 * Then the locate variables will be set with this {@link ArrayList}s.
+	 *
+	 * @param layers
+	 *            the {@link ArrayList} of {@link String}s containing the layers
+	 * @param maxFeatures
+	 *            the {@link ArrayList} of {@link Integer}s containing the max
+	 *            features
+	 */
+	private void checkLayerNumber(ArrayList<String> layers, ArrayList<Integer> maxFeatures) {
+		// IF THE SIZE OF LAYERS AND MAXFEATURES IS EQAL
+		if (layers.size() == maxFeatures.size()) {
+			// ALL OKAY
+		}
+		// ELSE THERE ARE MORE LAYERS THEN MAXFEATURES
+		else if (layers.size() > maxFeatures.size()) {
+			// EXTEND MAXFEATURES WITH THE MISSING MAXFEATURES
+			for (int a = maxFeatures.size() - 1; a < layers.size(); a++) {
+				maxFeatures.add(Integer.MAX_VALUE);
+			}
+		}
+		// ELSE THERE ARE LESS LAYERS THEN MAXFEATURES
+		else if (layers.size() < maxFeatures.size()) {
+			// SHORTEN MAXFEATURES
+			// CREATE TEMPORARY LIST
+			ArrayList<Integer> temp = maxFeatures;
+			// CLEAR MAXFEATURES
+			maxFeatures.clear();
+			// WRITE MAXFEATURES BACK, ONLY FOR THE LAYERS.SIZE
+			for (int a = 0; a < layers.size(); a++) {
+				maxFeatures.add(temp.get(a));
+			}
+		}
+		// SET THE (CORRECTED) LISTS
+		this.setLayers(layers);
+		this.setMaxFeatures(maxFeatures);
+
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -97,6 +188,16 @@ public class WfsLayer extends MapLayer {
 	@Override
 	public void receive() {
 		// TODO : HIER DIE DATEN VON DEM SERVER EMPFANGEN
+		// DA UNTERSCHIEDLICHE ANZAHLEN VON MAXFEATURES PRO LAYER ANGEBBAR SIND
+		// MUSS FUER JEDEN DIESER LAYER EINE EIGENE WFS ABFRAGE GESTARTET WERDEN
+		// UM NUR DIE ENTSPRECHENDE ANZAHL ABZUFRAGEN
+		for (int a = 0; a < this.getLayers().size(); a++) {
+			URL temp = XmlParser.getInstance().buildServerUrl(getLink(), getLayers().get(a), getVersion(),
+					this.getMaxFeatures().get(a), this.getBbox());
+			if (temp != null) {
+				this.downloadData(temp);
+			}
+		}
 
 		// CONVERTING THE INTERNAL POLYGONS TO DRAWPOLYGONS
 		// THE PDF COORDINATES OF THE DRAW OBJECTS WILL BE CALCULATED DIRECTLY
@@ -116,11 +217,42 @@ public class WfsLayer extends MapLayer {
 		for (int a = 0; a < this.getPoints().size(); a++) {
 			this.getCollection().addDrawElement(new DrawPoint(this.getPoints().get(a)));
 		}
+
+		this.getCollection().prepareData(this.getBbox().getDownLeft().getNorthing(),
+				this.getBbox().getDownLeft().getEasting(), this.getAngle(), this.getFactor());
+
+
+		// TODO : WAS IST DAMIT?! HIER AUFRUFEN, ODER IN DER PDF KLASSE?
+		// this.getCollection().prepareData(northingRed, eastingRed, angle,
+		// factor);
 	}
 
 	/**
-	 * Adds a single isance of {@link Geometry}. This may be a {@link Point2D},
-	 * a {@link LineString} or a {@link Polygon}. Returns true if the
+	 * TODO
+	 *
+	 * @param temp
+	 */
+	private void downloadData(URL temp) {
+		XmlParser xmlParser = XmlParser.getInstance();
+		xmlParser.downloadGeoFeatures(temp, this.getBbox().getSystem());
+
+		for (int a = 0; a < xmlParser.getPolygons().size(); a++) {
+			this.getPolygons().add(xmlParser.getPolygons().get(a));
+		}
+
+		for (int a = 0; a < xmlParser.getLineStrings().size(); a++) {
+			this.getLineStrings().add(xmlParser.getLineStrings().get(a));
+		}
+
+		for (int a = 0; a < xmlParser.getPoints().size(); a++) {
+			this.getPoints().add(xmlParser.getPoints().get(a));
+		}
+		xmlParser.clear();
+	}
+
+	/**
+	 * Adds a single instance of {@link Geometry}. This may be a {@link Point2D}
+	 * , a {@link LineString} or a {@link Polygon}. Returns true if the
 	 * {@link Geometry} was added successfully.
 	 *
 	 * @param g
@@ -139,6 +271,19 @@ public class WfsLayer extends MapLayer {
 			return true;
 		} else
 			return false;
+	}
+
+	/**
+	 * Adds a {@link ArrayList} of {@link Geometry}s. This list may contain
+	 * {@link Point2D}s , {@link LineString}s or {@link Polygon}s.
+	 *
+	 * @param geoList
+	 *            the {@link ArrayList} of {@link Geometry}s to add
+	 */
+	public void addGeometries(ArrayList<Geometry> geoList) {
+		for (int a = 0; a < geoList.size(); a++) {
+			this.addGeometry(geoList.get(a));
+		}
 	}
 
 	/**
@@ -348,6 +493,65 @@ public class WfsLayer extends MapLayer {
 	 */
 	public void setStyle(WebServiceStyle style) {
 		this.style = style;
+	}
+
+	/**
+	 * Returns the maximum number of features to be requested by this
+	 * {@link WfsLayer}.
+	 *
+	 * @return the maxFeatures as {@link Double}
+	 */
+	public ArrayList<Integer> getMaxFeatures() {
+		return maxFeatures;
+	}
+
+	/**
+	 * Sets the maximum number of features to be requested by this
+	 * {@link WfsLayer}.
+	 *
+	 * @param maxFeatures
+	 *            the maxFeatures to set
+	 */
+	public void setMaxFeatures(ArrayList<Integer> maxFeatures) {
+		this.maxFeatures = maxFeatures;
+	}
+
+	/**
+	 * Returns the angle of this {@link WfsLayer} as {@link Double}.
+	 *
+	 * @return the angle as {@link Double}
+	 */
+	public double getAngle() {
+		return angle;
+	}
+
+	/**
+	 * Sets the angle of this {@link WfsLayer}.
+	 *
+	 * @param angle
+	 *            the angle to set
+	 */
+	public void setAngle(double angle) {
+		this.angle = angle;
+	}
+
+	/**
+	 * Returns the factor of this {@link WfsLayer} as {@link Double}.
+	 *
+	 * @return the factor as {@link Double}
+	 */
+	public double getFactor() {
+		return factor;
+	}
+
+	/**
+	 * Sets the factor of this {@link WfsLayer}.
+	 *
+	 * @param factor
+	 *            the factor to set
+	 */
+	public void setFactor(double factor) {
+		this.factor = factor;
 	}
 
 	// OTHERS

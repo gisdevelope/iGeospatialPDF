@@ -14,8 +14,6 @@ import resources.PointAppearance;
  * Class to define and manage the possible styles of the {@link DrawElement}s
  * that can be displayed in an {@link WebServicePDF}.
  * 
- * TODO : STANDARTWERTE AUFLISTEN
- * 
  * @author DaGri
  * @since 12.05.2016
  */

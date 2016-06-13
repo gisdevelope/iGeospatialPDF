@@ -16,7 +16,6 @@ public class PdfCoordinateCalculator {
 	/**
 	 * The instance of this {@link PdfCoordinateCalculator}.
 	 */
-	@SuppressWarnings("unused")
 	private static PdfCoordinateCalculator instance;
 
 	/**
@@ -27,11 +26,9 @@ public class PdfCoordinateCalculator {
 	// CONSTRUCTORS
 
 	/**
-	 * Empty, private constuctor for a {@link PdfCoordinateCalculator}.
+	 * Empty, private constuctor for a {@link PdfCoordinateCalculator} (Singleton pattern).
 	 */
-	private PdfCoordinateCalculator() {
-
-	}
+	private PdfCoordinateCalculator() {}
 
 	// METHODS
 
@@ -41,11 +38,10 @@ public class PdfCoordinateCalculator {
 	 * @return a {@link PdfCoordinateCalculator}
 	 */
 	public static PdfCoordinateCalculator getInstance() {
-		if (getInstance() == null) {
-			setInstance(new PdfCoordinateCalculator());
-			return getInstance();
-		} else
-			return getInstance();
+		if (instance == null) {
+			instance = new PdfCoordinateCalculator();
+		}
+		return instance;
 	}
 
 	/**
@@ -98,7 +94,7 @@ public class PdfCoordinateCalculator {
 	 *            the easting to reduce
 	 * @return coord the reduced {@link PdfCoordinate}
 	 */
-	public PdfCoordinate redurce(PdfCoordinate coord, double northing, double easting) {
+	public PdfCoordinate reduce(PdfCoordinate coord, double northing, double easting) {
 		// REDURCE THE X BY THE GIVEN EASTING
 		coord.setX((float) (coord.getX() - easting));
 		// REDURCE THE Y BY THE GIVEN NORTHING

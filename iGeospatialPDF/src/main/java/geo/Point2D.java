@@ -1,6 +1,9 @@
 package geo;
 
+import java.util.logging.Logger;
+
 import coordinateSystems.CoordinateSystem;
+import coordinateSystems.EPSG25832;
 
 /**
  * Class to represent a point, specified by a coordinate pair, on the surface of
@@ -28,6 +31,11 @@ public class Point2D extends Geometry {
 	 * The {@link CoordinateSystem} used by this {@link Point2D}.
 	 */
 	private CoordinateSystem coordSystem;
+	
+	/**
+	 * TODO
+	 */
+	Logger LOG = Logger.getLogger(this.getClass().getCanonicalName());
 
 	// CONSTRUCTORS
 
@@ -61,9 +69,12 @@ public class Point2D extends Geometry {
 	 */
 	public Point2D(double northing, double easting, CoordinateSystem s) {
 		super();
-		this.northing = northing;
-		this.easting = easting;
-		this.coordSystem = s;
+		this.setNorthing(northing);
+		this.setEasting(easting);
+		if (s == null) {
+			s = new EPSG25832();
+		} else
+			this.setCoordSystem(s);
 		this.setGeometryType("Point2D");
 	}
 
