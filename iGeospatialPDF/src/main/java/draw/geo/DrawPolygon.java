@@ -72,7 +72,7 @@ public class DrawPolygon extends DrawElement {
 	public void reduce(double northing, double easting) {
 		// FOR ALL STORED PDFCOORDINATES
 		for (int a = 0; a < this.getPdfCoords().size(); a++) {
-			PdfCoordinateCalculator.getInstance().redurce(this.getPdfCoords().get(a), northing, easting);
+			PdfCoordinateCalculator.getInstance().reduce(this.getPdfCoords().get(a), northing, easting);
 		}
 	}
 

@@ -66,7 +66,7 @@ public class DrawPoint extends DrawElement {
 	 */
 	@Override
 	public void reduce(double northing, double easting) {
-		PdfCoordinateCalculator.getInstance().redurce(this.getPdfCoord(), northing, easting);
+		PdfCoordinateCalculator.getInstance().reduce(this.getPdfCoord(), northing, easting);
 	}
 
 	/*
