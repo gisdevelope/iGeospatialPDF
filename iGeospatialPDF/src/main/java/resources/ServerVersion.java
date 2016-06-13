@@ -8,5 +8,8 @@ package resources;
  * @since 13.05.2016
  */
 public enum ServerVersion {
-	v_1_1_0, v_1_3_0
+	// WFS VERSIONS
+	WFS_0_9_0, WFS_V_1_0_0, WFS_V_1_1_0, WFS_2_0_0, WFS_2_0_2, 
+	// WMS VERSIONS
+	WMS_0_0_3, WMS_0_1_0, WMS_0_9_0, WMS_1_0_0, WMS_1_1_0, WMS_1_3_0
 }
