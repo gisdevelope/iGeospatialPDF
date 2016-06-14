@@ -43,7 +43,7 @@ public class GeoDrawElementsTest {
 		maxFeatures.add(100);
 		maxFeatures.add(400);
 
-		WfsLayer layer1 = new WfsLayer("testLink", bbox, ServerVersion.v_1_1_0, layers, maxFeatures, null);
+		WfsLayer layer1 = new WfsLayer("testLink", bbox, ServerVersion.WFS_V_1_1_0, layers, maxFeatures, null);
 		
 		layer1.setStyle(style);
 

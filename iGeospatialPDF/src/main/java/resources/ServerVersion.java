@@ -9,7 +9,7 @@ package resources;
  */
 public enum ServerVersion {
 	// WFS VERSIONS
-	WFS_0_9_0, WFS_V_1_0_0, WFS_V_1_1_0, WFS_2_0_0, WFS_2_0_2, 
+	WFS_V_0_9_0, WFS_V_1_0_0, WFS_V_1_1_0, WFS_V_2_0_0, WFS_V_2_0_2, 
 	// WMS VERSIONS
-	WMS_0_0_3, WMS_0_1_0, WMS_0_9_0, WMS_1_0_0, WMS_1_1_0, WMS_1_3_0
+	WMS_V_0_0_3, WMS_V_0_1_0, WMS_V_0_9_0, WMS_V_1_0_0, WMS_V_1_1_0, WMS_V_1_3_0
 }

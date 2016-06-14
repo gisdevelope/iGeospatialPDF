@@ -82,10 +82,16 @@ public class XmlParser {
 			BoundingBox bbox) {
 		String bboxCorners = bbox.getCornersByVersion(version);
 		String versionString = null;
-		if (version.toString().equals(ServerVersion.WFS_V_1_0_0.toString())) {
+		if (version.toString().equals(ServerVersion.WFS_V_0_9_0.toString())) {
+			versionString = "0.9.0";
+		} else if (version.toString().equals(ServerVersion.WFS_V_1_0_0.toString())) {
 			versionString = "1.0.0";
 		} else if (version.toString().equals(ServerVersion.WFS_V_1_1_0.toString())) {
 			versionString = "1.1.0";
+		} else if (version.toString().equals(ServerVersion.WFS_V_2_0_0.toString())) {
+			versionString = "2.0.0";
+		} else if (version.toString().equals(ServerVersion.WFS_V_2_0_2.toString())) {
+			versionString = "2.0.2";
 		} else {
 			LOG.severe("VERSION IS NOT SUPPORTED!");
 		}

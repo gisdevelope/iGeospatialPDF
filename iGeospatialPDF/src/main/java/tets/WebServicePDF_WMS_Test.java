@@ -42,7 +42,7 @@ public class WebServicePDF_WMS_Test {
 		ArrayList<String> layer = new ArrayList<String>();
 		layer.add("nw_dtk10_col");
 
-		WmsLayer layer1 = new WmsLayer(bbox, "www.wms.nrw.de/geobasis/wms_nw_dtk10?", layer, ServerVersion.v_1_3_0, 100,
+		WmsLayer layer1 = new WmsLayer(bbox, "www.wms.nrw.de/geobasis/wms_nw_dtk10?", layer, ServerVersion.WMS_V_1_3_0, 100,
 				30, pdf.getPageWidth(), pdf.getPageHeight());
 
 		pdf.addLayer(layer1);

@@ -446,10 +446,23 @@ public class WmsLayer extends MapLayer {
 
 			String versionString = "VERSION=";
 			String systemString = "";
-			if (this.getVersion().toString().equals(ServerVersion.v_1_1_0.toString())) {
-				versionString = versionString + "1.1.0";
+			// TODO : WMS VERSIONEN BRAUCHEN UNTERSCHIEDLICHE CRS UND SRS
+			if (this.getVersion().toString().equals(ServerVersion.WMS_V_0_0_3.toString())) {
+				versionString = versionString + "0.0.3";
 				systemString = "SRS=EPSG:" + this.getBbox().getSystem().getEPSG();
-			} else if (this.getVersion().toString().equals(ServerVersion.v_1_3_0.toString())) {
+			} else if (this.getVersion().toString().equals(ServerVersion.WMS_V_0_1_0.toString())) {
+				versionString = versionString + "0.1.0";
+				systemString = "CRS=EPSG:" + this.getBbox().getSystem().getEPSG();
+			}else if (this.getVersion().toString().equals(ServerVersion.WMS_V_0_9_0.toString())) {
+				versionString = versionString + "0.9.0";
+				systemString = "CRS=EPSG:" + this.getBbox().getSystem().getEPSG();
+			}else if (this.getVersion().toString().equals(ServerVersion.WMS_V_1_0_0.toString())) {
+				versionString = versionString + "1.0.0";
+				systemString = "CRS=EPSG:" + this.getBbox().getSystem().getEPSG();
+			}else if (this.getVersion().toString().equals(ServerVersion.WMS_V_1_1_0.toString())) {
+				versionString = versionString + "1.1.0";
+				systemString = "CRS=EPSG:" + this.getBbox().getSystem().getEPSG();
+			} else if (this.getVersion().toString().equals(ServerVersion.WMS_V_1_3_0.toString())) {
 				versionString = versionString + "1.3.0";
 				systemString = "CRS=EPSG:" + this.getBbox().getSystem().getEPSG();
 			}

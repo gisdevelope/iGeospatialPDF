@@ -80,7 +80,7 @@ public class BoundingBox {
 	 */
 	public BoundingBox(Point2D downLeft, Point2D upRight, CoordinateSystem system) {
 		super();
-		
+
 		LOG.setLevel(Level.SEVERE);
 
 		this.downLeft = downLeft;
@@ -152,43 +152,102 @@ public class BoundingBox {
 	public String getCornersByVersion(ServerVersion version) {
 		// CREATE THE RESULT STRING
 		String erg = "";
-		// FOR SERVER VERSION 1.1.0
-		if (version.toString().equals(ServerVersion.v_1_1_0.toString())) {
+
+		// TODO : NEUE SERVER VERSIONEN BERUECKSICHTIGEN
+
+		// WEB FEATURE SERVICES
+		if (version.toString().equals(ServerVersion.WFS_V_0_9_0.toString())) {
 			// PUT THE STRING TOGETHER : EASTRING, NORTHING, EASTING NORTHING
-			LOG.info("DETECTED SERVER VERSION 1.1.0");
+			LOG.info("DETECTED SERVER VERSION WFS_V_0_9_0");
 			erg = "" + this.getDownLeft().getEasting() + "," + this.getDownLeft().getNorthing() + ","
 					+ this.getUpRight().getEasting() + "," + this.getUpRight().getNorthing();
 			// RETURN STRING
-			LOG.info("RETURNING CORNER VALUES FOR SERVER VERSION 1.1.0");
+			LOG.info("RETURNING CORNER VALUES FOR SERVER VERSION WFS_V_0_9_0");
+			return erg;
+		} else if (version.toString().equals(ServerVersion.WFS_V_1_0_0.toString())) {
+			// PUT THE STRING TOGETHER : EASTRING, NORTHING, EASTING NORTHING
+			LOG.info("DETECTED SERVER VERSION WFS_V_1_0_0");
+			erg = "" + this.getDownLeft().getEasting() + "," + this.getDownLeft().getNorthing() + ","
+					+ this.getUpRight().getEasting() + "," + this.getUpRight().getNorthing();
+			// RETURN STRING
+			LOG.info("RETURNING CORNER VALUES FOR SERVER VERSION WFS_V_1_0_0");
+			return erg;
+		} else if (version.toString().equals(ServerVersion.WFS_V_1_1_0.toString())) {
+			// PUT THE STRING TOGETHER : EASTRING, NORTHING, EASTING NORTHING
+			LOG.info("DETECTED SERVER VERSION WFS_V_1_1_0");
+			erg = "" + this.getDownLeft().getEasting() + "," + this.getDownLeft().getNorthing() + ","
+					+ this.getUpRight().getEasting() + "," + this.getUpRight().getNorthing();
+			// RETURN STRING
+			LOG.info("RETURNING CORNER VALUES FOR SERVER VERSION WFS_V_1_1_0");
+			return erg;
+		} else if (version.toString().equals(ServerVersion.WFS_V_2_0_0.toString())) {
+			// PUT THE STRING TOGETHER : EASTRING, NORTHING, EASTING NORTHING
+			LOG.info("DETECTED SERVER VERSION WFS_V_2_0_0");
+			erg = "" + this.getDownLeft().getEasting() + "," + this.getDownLeft().getNorthing() + ","
+					+ this.getUpRight().getEasting() + "," + this.getUpRight().getNorthing();
+			// RETURN STRING
+			LOG.info("RETURNING CORNER VALUES FOR SERVER VERSION WFS_V_2_0_0");
+			return erg;
+		} else if (version.toString().equals(ServerVersion.WFS_V_2_0_2.toString())) {
+			// PUT THE STRING TOGETHER : EASTRING, NORTHING, EASTING NORTHING
+			LOG.info("DETECTED SERVER VERSION WFS_V_2_0_2");
+			erg = "" + this.getDownLeft().getEasting() + "," + this.getDownLeft().getNorthing() + ","
+					+ this.getUpRight().getEasting() + "," + this.getUpRight().getNorthing();
+			// RETURN STRING
+			LOG.info("RETURNING CORNER VALUES FOR SERVER VERSION WFS_V_2_0_2");
 			return erg;
 		}
-		// FOR SERVER VERSION 1.3.0
-		else if (version.toString().equals(ServerVersion.v_1_3_0.toString())) {
-			LOG.info("DETECTED SERVER VERSION 1.3.0");
+		// WEB MAP SERVICE
+		else if (version.toString().equals(ServerVersion.WMS_V_0_0_3.toString())) {
 			// PUT THE STRING TOGETHER : EASTRING, NORTHING, EASTING NORTHING
+			LOG.info("DETECTED SERVER VERSION WMS_V_0_0_3");
 			erg = "" + this.getDownLeft().getEasting() + "," + this.getDownLeft().getNorthing() + ","
 					+ this.getUpRight().getEasting() + "," + this.getUpRight().getNorthing();
 			// RETURN STRING
-			LOG.info("RETURNING CORNER VALUES FOR SERVER VERSION 1.3.0");
+			LOG.info("RETURNING CORNER VALUES FOR SERVER VERSION WMS_V_0_0_3");
 			return erg;
-		} // FOR SERVER VERSION WFS_1_0_0
-		else if (version.toString().equals(ServerVersion.WFS_V_1_0_0.toString())) {
-			LOG.info("DETECTED SERVER VERSION WFS_1_0_0");
+		} else if (version.toString().equals(ServerVersion.WMS_V_0_1_0.toString())) {
 			// PUT THE STRING TOGETHER : EASTRING, NORTHING, EASTING NORTHING
+			LOG.info("DETECTED SERVER VERSION WMS_V_0_1_0");
 			erg = "" + this.getDownLeft().getEasting() + "," + this.getDownLeft().getNorthing() + ","
 					+ this.getUpRight().getEasting() + "," + this.getUpRight().getNorthing();
 			// RETURN STRING
-			LOG.info("RETURNING CORNER VALUES FOR SERVER VERSION WFS_1_0_0");
+			LOG.info("RETURNING CORNER VALUES FOR SERVER VERSION WMS_V_0_1_0");
 			return erg;
-		} // FOR SERVER VERSION WFS_1_1_0
-		else if (version.toString().equals(ServerVersion.WFS_V_1_1_0.toString())) {
-			LOG.info("DETECTED SERVER VERSION WFS_1_1_0");
+		} else if (version.toString().equals(ServerVersion.WMS_V_0_9_0.toString())) {
 			// PUT THE STRING TOGETHER : EASTRING, NORTHING, EASTING NORTHING
+			LOG.info("DETECTED SERVER VERSION WMS_V_0_9_0");
 			erg = "" + this.getDownLeft().getEasting() + "," + this.getDownLeft().getNorthing() + ","
 					+ this.getUpRight().getEasting() + "," + this.getUpRight().getNorthing();
 			// RETURN STRING
-			LOG.info("RETURNING CORNER VALUES FOR SERVER VERSION WFS_1_1_0");
+			LOG.info("RETURNING CORNER VALUES FOR SERVER VERSION WMS_V_0_9_0");
 			return erg;
+		} else if (version.toString().equals(ServerVersion.WMS_V_1_0_0.toString())) {
+			// PUT THE STRING TOGETHER : EASTRING, NORTHING, EASTING NORTHING
+			LOG.info("DETECTED SERVER VERSION WMS_V_1_0_0");
+			erg = "" + this.getDownLeft().getEasting() + "," + this.getDownLeft().getNorthing() + ","
+					+ this.getUpRight().getEasting() + "," + this.getUpRight().getNorthing();
+			// RETURN STRING
+			LOG.info("RETURNING CORNER VALUES FOR SERVER VERSION WMS_V_1_0_0");
+			return erg;
+		} else if (version.toString().equals(ServerVersion.WMS_V_1_1_0.toString())) {
+			// PUT THE STRING TOGETHER : EASTRING, NORTHING, EASTING NORTHING
+			LOG.info("DETECTED SERVER VERSION WMS_V_1_1_0");
+			erg = "" + this.getDownLeft().getEasting() + "," + this.getDownLeft().getNorthing() + ","
+					+ this.getUpRight().getEasting() + "," + this.getUpRight().getNorthing();
+			// RETURN STRING
+			LOG.info("RETURNING CORNER VALUES FOR SERVER VERSION WMS_V_1_1_0");
+			return erg;
+		} else if (version.toString().equals(ServerVersion.WMS_V_1_3_0.toString())) {
+			// PUT THE STRING TOGETHER : EASTRING, NORTHING, EASTING NORTHING
+			LOG.info("DETECTED SERVER VERSION WMS_V_1_3_0");
+			erg = "" + this.getDownLeft().getEasting() + "," + this.getDownLeft().getNorthing() + ","
+					+ this.getUpRight().getEasting() + "," + this.getUpRight().getNorthing();
+			// RETURN STRING
+			LOG.info("RETURNING CORNER VALUES FOR SERVER VERSION WMS_V_1_3_0");
+			return erg;
+		} else {
+			LOG.severe("SERVER VERSION NOT SUPPORTED YET!");
 		}
 		// SERVER VERSION NOT SUPPORTED
 		LOG.severe("COULD NOT FIND SERVER VERSION " + version.toString() + ". NO BOUNDINGBOX CORNER ORDER RETURNED!");
