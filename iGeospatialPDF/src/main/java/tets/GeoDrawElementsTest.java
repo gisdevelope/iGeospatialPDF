@@ -24,13 +24,12 @@ import resources.ServerVersion;
 public class GeoDrawElementsTest {
 
 	public static void main(String[] args) {
-		WebServicePDF pdf = new WebServicePDF(PdfPageSize.DinA0);
-
 		EPSG25832 epsg = new EPSG25832();
-
 		BoundingBox bbox = new BoundingBox(new Point2D(0, 0, epsg), new Point2D(1000, 1000, epsg), epsg);
 
-		pdf.setMasterBbox(bbox);
+		WebServicePDF pdf = new WebServicePDF(PdfPageSize.DinA0, bbox);
+
+//		pdf.setMasterBbox(bbox);
 
 		WebServiceStyle style = new WebServiceStyle(Color.BLACK, Color.BLUE, Color.CYAN, Color.BLACK, Color.CYAN, 1, 1,
 				1, false, false, null, 50, null);
@@ -38,13 +37,13 @@ public class GeoDrawElementsTest {
 		ArrayList<String> layers = new ArrayList<>();
 		layers.add("contentLayer1");
 		layers.add("contentLayer2");
-		
+
 		ArrayList<Integer> maxFeatures = new ArrayList<>();
 		maxFeatures.add(100);
 		maxFeatures.add(400);
 
 		WfsLayer layer1 = new WfsLayer("testLink", bbox, ServerVersion.WFS_V_1_1_0, layers, maxFeatures, null);
-		
+
 		layer1.setStyle(style);
 
 		Point2D p1 = new Point2D(500, 500, new EPSG25832());

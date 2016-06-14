@@ -20,6 +20,7 @@ import org.jdom2.input.SAXBuilder;
 
 import coordinateSystems.CoordinateSystem;
 import geo.BoundingBox;
+import geo.Geometry;
 import geo.LineString;
 import geo.Point2D;
 import geo.Polygon;
@@ -69,6 +70,21 @@ public class XmlParser {
 
 	// METHODS
 
+	/**
+	 * Fills the internal {@link ArrayList} of {@link Geometry}s by accessing a
+	 * web feature service.
+	 *
+	 * @param serverLink
+	 *            the link to the server as {@link String}
+	 * @param layers
+	 *            the layers to request as {@link String}
+	 * @param version
+	 *            the version to access as {@link ServerVersion}
+	 * @param maxFeatures
+	 *            the maximum count of features
+	 * @param bbox
+	 *            the {@link BoundingBox} to request features inside
+	 */
 	public void getGeoObjects(String serverLink, String layers, ServerVersion version, int maxFeatures,
 			BoundingBox bbox) {
 		URL url = this.buildServerUrl(serverLink, layers, version, maxFeatures, bbox);
@@ -78,6 +94,25 @@ public class XmlParser {
 		this.downloadGeoFeatures(url, bbox.getSystem());
 	}
 
+	/**
+	 * Builds the {@link URL} that can be used to access a web feature server.
+	 * The {@link URL} will be build using the link to the server as
+	 * {@link String}, a {@link String} containing the layers, the
+	 * {@link ServerVersion}, the maximum features to request as {@link Integer}
+	 * and the {@link BoundingBox} to request.
+	 * 
+	 * @param serverLink
+	 *            the link to the server as {@link String}
+	 * @param layers
+	 *            the layers to request as {@link String}
+	 * @param version
+	 *            the version to access as {@link ServerVersion}
+	 * @param maxFeatures
+	 *            the maximum features to access
+	 * @param bbox
+	 *            the {@link BoundingBox} to request
+	 * @return the coputated {@link URL}
+	 */
 	public URL buildServerUrl(String serverLink, String layers, ServerVersion version, int maxFeatures,
 			BoundingBox bbox) {
 		String bboxCorners = bbox.getCornersByVersion(version);
@@ -105,9 +140,16 @@ public class XmlParser {
 			return url;
 		} else
 			return null;
-
 	}
 
+	/**
+	 * Returns the from the {@link String} converted {@link URL} or null if it
+	 * did not work.
+	 *
+	 * @param buildedServerLink
+	 *            the {@link String} to parse
+	 * @return url the converted {@link URL}
+	 */
 	private URL getUrl(String buildedServerLink) {
 		try {
 			URL url = new URL(buildedServerLink);
@@ -120,11 +162,28 @@ public class XmlParser {
 		return null;
 	}
 
+	/**
+	 * Downloads the XML with the given {@link URL} and creates the
+	 * {@link Point2D}s, {@link LineString}s and {@link Polygon}s with the given
+	 * {@link CoordinateSystem}.
+	 *
+	 * @param url
+	 *            the {@link URL} to download from
+	 * @param system
+	 *            the {@link CoordinateSystem}
+	 */
 	public void downloadGeoFeatures(URL url, CoordinateSystem system) {
 		String xml = this.downloadXml(url);
 		this.parseWfsXml(xml, system);
 	}
 
+	/**
+	 * Downloads the XML-data from the given {@link URL}.
+	 *
+	 * @param url
+	 *            the URL to download the features from
+	 * @return the downloaded XML as {@link String}
+	 */
 	private String downloadXml(URL url) {
 		try {
 			URLConnection connection = url.openConnection();
@@ -144,12 +203,31 @@ public class XmlParser {
 		}
 	}
 
+	/**
+	 * Creates the {@link Point2D}s, the {@link LineString}s and the
+	 * {@link Polygon}s from the XML given as {@link String} with the given
+	 * {@link CoordinateSystem}.
+	 *
+	 * @param xml
+	 *            the XML to parse as {@link String}
+	 * @param system
+	 *            the {@link CoordinateSystem}
+	 */
 	private void parseWfsXml(String xml, CoordinateSystem system) {
 		this.createPoint2Ds(xml, system);
 		this.createLineStrings(xml, system);
 		this.createPolygons(xml, system);
 	}
 
+	/**
+	 * Creates {@link Point2D}s from the as {@link String} given XML with the
+	 * given {@link CoordinateSystem}.
+	 *
+	 * @param xml
+	 *            the XML as {@link String}
+	 * @param system
+	 *            the {@link CoordinateSystem}
+	 */
 	public void createPoint2Ds(String xml, CoordinateSystem system) {
 		Document doc;
 		try {
@@ -163,15 +241,27 @@ public class XmlParser {
 				ArrayList<Element> ergElem1 = this.findTaginXml(ergElem0.get(a), "coordinates");
 				for (int b = 0; b < ergElem1.size(); b++) {
 					String elementText = ergElem1.get(b).getText();
-					// TODO : DAS MUSS AUCH NICHT ZWINGEND MIT KOMMA GETRENNT
-					// SEIN, ODER?
+					// SPLIT THE STRING AT A ","
 					String[] textParts = elementText.split(",");
-
-					// TODO : SYSTEM DES ZU ERSTELLENDEN PUNKTES NICHT KLAR!
-					// TODO : REIHENFOLGE DER RECHTS UND HOCHWERTE NICHT KLAR!
-					Point2D p1 = new Point2D(Double.parseDouble(textParts[1]), Double.parseDouble(textParts[0]),
-							system);
-					this.getPoints().add(p1);
+					// CHECK IF THE LENGTH OF THE ARRAY IS == 2 (X AND Y)
+					if (textParts.length != 2) {
+						// IF NOT : TRY TO SPLIT IT AT AN BLANK SPACE
+						textParts = elementText.split(" ");
+					}
+					// IF THE STRING IS OKAY IN LENGTH
+					if (textParts.length == 2) {
+						// TRY
+						try {
+							// CREATE POINT
+							Point2D p1 = new Point2D(Double.parseDouble(textParts[1]), Double.parseDouble(textParts[0]),
+									system);
+							// ADD POINT
+							this.getPoints().add(p1);
+						} catch (NumberFormatException e) {
+							// CATCH EXCEPTION : POINT WILL NOT BE CREATED
+							LOG.severe("COULD NOT PARSE DOUBLE VALUE FROM THE SPLITTED STRING");
+						}
+					}
 				}
 			}
 		} catch (JDOMException | IOException e) {
@@ -182,13 +272,33 @@ public class XmlParser {
 	};
 
 	public void createLineStrings(String xml, CoordinateSystem system) {
-
+		// TODO : CREATE LINESTRINGS
 	};
 
+	/**
+	 * Creates {@link LineString}s from the given XML as {@link String} with the
+	 * given {@link CoordinateSystem}.
+	 *
+	 * @param xml
+	 *            as {@link String}
+	 * @param system
+	 *            as {@link CoordinateSystem}
+	 */
 	public void createPolygons(String xml, CoordinateSystem system) {
-
+		// TODO : CREATE POLYGONS
 	};
 
+	/**
+	 * Finds {@link Element}s below a root {@link Element} with the given tag as
+	 * {@link String} and returns all found {@link Element}s in an
+	 * {@link ArrayList}.
+	 *
+	 * @param rootElement
+	 *            the root {@link Element} of the XML
+	 * @param tag
+	 *            the tag to find as {@link String}
+	 * @return {@link ArrayList} of {@link Element}s with the given tag
+	 */
 	public ArrayList<Element> findTaginXml(Element rootElement, String tag) {
 		ArrayList<Element> erg = new ArrayList<>();
 		try {
@@ -217,7 +327,6 @@ public class XmlParser {
 			// CATCH EXCEPTION
 			return erg;
 		}
-
 	}
 
 	/**

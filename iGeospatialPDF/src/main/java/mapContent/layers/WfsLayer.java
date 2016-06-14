@@ -187,7 +187,6 @@ public class WfsLayer extends MapLayer {
 	 */
 	@Override
 	public void receive() {
-		// TODO : HIER DIE DATEN VON DEM SERVER EMPFANGEN
 		// DA UNTERSCHIEDLICHE ANZAHLEN VON MAXFEATURES PRO LAYER ANGEBBAR SIND
 		// MUSS FUER JEDEN DIESER LAYER EINE EIGENE WFS ABFRAGE GESTARTET WERDEN
 		// UM NUR DIE ENTSPRECHENDE ANZAHL ABZUFRAGEN
@@ -218,19 +217,17 @@ public class WfsLayer extends MapLayer {
 			this.getCollection().addDrawElement(new DrawPoint(this.getPoints().get(a)));
 		}
 
+		// PREPARE THE DATA
 		this.getCollection().prepareData(this.getBbox().getDownLeft().getNorthing(),
 				this.getBbox().getDownLeft().getEasting(), this.getAngle(), this.getFactor());
-
-
-		// TODO : WAS IST DAMIT?! HIER AUFRUFEN, ODER IN DER PDF KLASSE?
-		// this.getCollection().prepareData(northingRed, eastingRed, angle,
-		// factor);
 	}
 
 	/**
-	 * TODO
+	 * Downloads the Data from the given {@link URL} and adds the created
+	 * {@link Geometry}s to the internal {@link ArrayList}s.
 	 *
 	 * @param temp
+	 *            the {@link URL} to download the data from.
 	 */
 	private void downloadData(URL temp) {
 		XmlParser xmlParser = XmlParser.getInstance();
@@ -296,7 +293,11 @@ public class WfsLayer extends MapLayer {
 	// TODO : HIER GGF AUCH DAS STRUCTURE ELEMENT ANGEBEN - DAMIT ENTFELLT DER
 	// EXTRA AUFRUF
 	public void drawPolygons(PdfContentByte contByte) {
+		// SET THE CONTENT BYTE
 		this.getCollection().getDrawer().setContByte(contByte);
+		// SET THE STYLE
+		((WebServiceDrawer) this.getCollection().getDrawer()).setStyle(this.getStyle());
+		// DRAW THE POLYGONS
 		((WebServiceDrawer) this.getCollection().getDrawer()).drawPolygons(this.getCollection());
 	}
 
@@ -308,7 +309,11 @@ public class WfsLayer extends MapLayer {
 	 *            the {@link PdfContentByte} to use while drawing
 	 */
 	public void drawLinestrings(PdfContentByte contByte) {
+		// SET THE CONTENT BYTE
 		this.getCollection().getDrawer().setContByte(contByte);
+		// SET THE STYLE
+		((WebServiceDrawer) this.getCollection().getDrawer()).setStyle(this.getStyle());
+		// DRAW THE LINESTRINGS
 		((WebServiceDrawer) this.getCollection().getDrawer()).drawLineStrings(this.getCollection());
 	}
 
@@ -320,7 +325,11 @@ public class WfsLayer extends MapLayer {
 	 *            the {@link PdfContentByte} to use while drawing
 	 */
 	public void drawPoints(PdfContentByte contByte) {
+		// SET THE CONTENT BYTE
 		this.getCollection().getDrawer().setContByte(contByte);
+		// SET THE STYLE
+		((WebServiceDrawer) this.getCollection().getDrawer()).setStyle(this.getStyle());
+		// DRAW THE POINTS
 		((WebServiceDrawer) this.getCollection().getDrawer()).drawPoints(this.getCollection());
 	}
 
