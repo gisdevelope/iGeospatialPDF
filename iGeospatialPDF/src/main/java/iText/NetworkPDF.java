@@ -1,5 +1,6 @@
 package iText;
 
+import geo.BoundingBox;
 import network.NetworkElement;
 import resources.PdfPageSize;
 
@@ -22,8 +23,8 @@ public class NetworkPDF extends GeospatialPDF {
 	 * 
 	 * @param pageSize
 	 */
-	public NetworkPDF(PdfPageSize pageSize) {
-		super(pageSize);
+	public NetworkPDF(PdfPageSize pageSize, BoundingBox masterBbox) {
+		super(pageSize, masterBbox);
 		// TODO Auto-generated constructor stub
 	}
 

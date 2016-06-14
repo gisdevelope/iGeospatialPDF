@@ -25,6 +25,7 @@ import draw.DrawElement;
 import draw.drawer.Drawer;
 import geo.BoundingBox;
 import mapContent.layers.MapLayer;
+import mapContent.layers.ReferencedLayer;
 import resources.PdfPageSize;
 
 /**
@@ -88,6 +89,12 @@ public abstract class GeospatialPDF {
 	private PdfWriter writer;
 
 	/**
+	 * The {@link ReferencedLayer} used for the geographic-referencing of the
+	 * content, that will be contained in the {@link GeospatialPDF}.
+	 */
+	private ReferencedLayer refLayer;
+
+	/**
 	 * The {@link Logger} used to log.
 	 */
 	Logger LOG;
@@ -95,19 +102,28 @@ public abstract class GeospatialPDF {
 	// CONSTRUCTORS
 
 	/**
-	 * Constructor for a {@link GeospatialPDF} using a {@link Rectangle} input
-	 * to define the size of the page to create.
+	 * Constructor for a {@link GeospatialPDF} using a {@link PageSize} input to
+	 * define the size of the page to create and a {@link BoundingBox} that will
+	 * be used as master {@link BoundingBox}.
 	 * 
 	 * @param pageSize
-	 *            the size of the map page
+	 *            the {@link PageSize} to create
+	 * @param masterBBox
+	 *            the master {@link BoundingBox}
 	 */
-	public GeospatialPDF(PdfPageSize pageSize) {
+	public GeospatialPDF(PdfPageSize pageSize, BoundingBox masterBBox) {
 
 		// SET THE GIVEN PAGE SIZE
 		this.setPageSize(pageSize);
 
 		// CALCULATE THE DOCUMENT SIZE
 		this.calcDocumentSize(pageSize);
+
+		// SET THE MASTER BOUNDINGBOX
+		this.setMasterBbox(masterBBox);
+
+		// CREATE AND ADD THE REFERENCED LAYER
+		this.getLayers().add(new ReferencedLayer(this.getMasterBbox(), this.getPageWidth(), this.getPageHeight()));
 
 		// SET THE LOGGER
 		this.LOG = Logger.getLogger(this.getClass().getCanonicalName());
@@ -296,6 +312,109 @@ public abstract class GeospatialPDF {
 		return null;
 	}
 
+	/**
+	 * Scales the image of the {@link ReferencedLayer} until it perfectly fits
+	 * the page.
+	 *
+	 * @param img
+	 *            the image of the {@link ReferencedLayer} to scale
+	 */
+	protected void scaleReferencedImage(Image img) {
+		// CALCULATE THE PAGE SIZE TO FIT THE IMAGE TO
+		float pageDotsWidth = this.getPageWidth() * 72;
+		float pageDotsHeight = this.getPageHeight() * 72;
+
+		// TODO : BILD AN DIE SEITENGROESSE ANPASSEN
+
+		// MASTER BOUNDINGBOX HOCHKANT
+		if (this.getMasterBbox().getWidthGeo() < this.getMasterBbox().getHeightGeo()) {
+			// SEITE HOCHKANT
+			if (this.getPageWidth() < this.getPageHeight()) {
+				// CALCUALTE THE FACTOR
+				float factor = pageDotsWidth / img.getPlainWidth();
+				// SCALE THE IMAGE
+				img.scaleAbsolute(img.getPlainWidth() * factor, img.getPlainHeight() * factor);
+				// IMAGE STILL NOT HEIGHER AS THE PAGE
+				if (img.getPlainHeight() < pageDotsHeight) {
+					// OKAY
+				}
+				// ELSE THE IMAGE IS HIGHER THAN THE PAGE
+				else {
+					// CALCUALTE THE FACTOR
+					factor = pageDotsHeight / img.getPlainHeight();
+					// SCALE THE IMAGE
+					img.scaleAbsolute(img.getPlainWidth() * factor, img.getPlainHeight() * factor);
+				}
+			}
+			// SEITE QUER
+			else if (this.getPageWidth() > this.getPageHeight()) {
+				// CALCUALTE THE FACTOR
+				float factor = pageDotsHeight / img.getPlainHeight();
+				// SCALE THE IMAGE
+				img.scaleAbsolute(img.getPlainWidth() * factor, img.getHeight() * factor);
+				// IMAGE STILL NOT AS LARGE AS THE PAGE
+				if (img.getPlainWidth() < pageDotsWidth) {
+					// OKAY
+				}
+				// ELSE THE IMAGE IS LARGER THANT THE PAGE
+				else {
+					factor = pageDotsWidth / img.getPlainWidth();
+					// SCALE THE IMAGE
+					img.scaleAbsolute(img.getPlainWidth() * factor, img.getPlainHeight() * factor);
+				}
+			}
+		}
+		// MASTER BOUNDINGBOX QUER
+		else if (this.getMasterBbox().getWidthGeo() > this.getMasterBbox().getHeightGeo()) {
+			// SEITE HOCHKANT
+			if (this.getPageWidth() < this.getPageHeight()) {
+				// CALCUALTE THE FACTOR
+				float factor = pageDotsWidth / img.getPlainWidth();
+				// SCALE THE IMAGE
+				img.scaleAbsolute(img.getPlainWidth() * factor, img.getPlainHeight() * factor);
+				// IMAGE STILL NOT HEIGHER AS THE PAGE
+				if (img.getPlainHeight() < pageDotsHeight) {
+					// OKAY
+				}
+				// ELSE THE IMAGE IS HIGHER THAN THE PAGE
+				else {
+					// CALCUALTE THE FACTOR
+					factor = pageDotsHeight / img.getPlainHeight();
+					// SCALE THE IMAGE
+					img.scaleAbsolute(img.getPlainWidth() * factor, img.getPlainHeight() * factor);
+				}
+			}
+			// SEITE QUER
+			else if (this.getPageWidth() > this.getPageHeight()) {
+				// CALCUALTE THE FACTOR
+				float factor = pageDotsHeight / img.getPlainHeight();
+				// SCALE THE IMAGE
+				img.scaleAbsolute(img.getPlainWidth() * factor, img.getPlainHeight() * factor);
+				// IMAGE STILL NOT AS LARGE AS THE PAGE
+				if (img.getPlainWidth() < pageDotsWidth) {
+					// OKAY
+				}
+				// ELSE THE IMAGE IS LARGER THANT THE PAGE
+				else {
+					factor = pageDotsWidth / img.getPlainWidth();
+					// SCALE THE IMAGE
+					img.scaleAbsolute(img.getWidth() * factor, img.getHeight() * factor);
+				}
+			}
+		}
+		// MASTER BOUNDINGBOX QUADRATISCH
+		else if (this.getMasterBbox().getWidthGeo() == this.getMasterBbox().getHeightGeo()) {
+			// SEITE HOCHKANT
+			if (this.getPageWidth() < this.getPageHeight()) {
+
+			}
+			// SEITE QUER
+			else if (this.getPageWidth() > this.getPageHeight()) {
+
+			}
+		}
+	}
+
 	// GETTERS AND SETTERS
 
 	/**
@@ -471,6 +590,15 @@ public abstract class GeospatialPDF {
 	 */
 	public void setWriter(PdfWriter writer) {
 		this.writer = writer;
+	}
+
+	/**
+	 * Returns the {@link ReferencedLayer} of this {@link GeospatialPDF}.
+	 *
+	 * @return the refLayer as {@link ReferencedLayer}
+	 */
+	public ReferencedLayer getRefLayer() {
+		return refLayer;
 	}
 
 	// OTHERS

@@ -1,5 +1,6 @@
 package iText;
 
+import geo.BoundingBox;
 import resources.PdfPageSize;
 
 /**
@@ -23,8 +24,8 @@ public class MeasurePDF extends GeospatialPDF {
 	 * @param pageSize
 	 *            the {@link PdfPageSize} to use
 	 */
-	public MeasurePDF(PdfPageSize pageSize) {
-		super(pageSize);
+	public MeasurePDF(PdfPageSize pageSize, BoundingBox masterBbox) {
+		super(pageSize, masterBbox);
 		// TODO Auto-generated constructor stub
 	}
 

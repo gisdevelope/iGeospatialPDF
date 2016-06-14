@@ -14,6 +14,7 @@ import com.lowagie.text.pdf.PdfName;
 import com.lowagie.text.pdf.PdfStructureElement;
 import com.lowagie.text.pdf.PdfStructureTreeRoot;
 
+import geo.BoundingBox;
 import mapContent.layers.ReferencedLayer;
 import mapContent.layers.WfsLayer;
 import mapContent.layers.WmsLayer;
@@ -40,8 +41,8 @@ public class WebServicePDF extends GeospatialPDF {
 	 * @param pageSize
 	 *            the size of the page as {@link Rectangle}
 	 */
-	public WebServicePDF(PdfPageSize pageSize) {
-		super(pageSize);
+	public WebServicePDF(PdfPageSize pageSize, BoundingBox masterBbox) {
+		super(pageSize, masterBbox);
 		// INSTANCITAE LOGGER
 		this.LOG = Logger.getLogger(this.getClass().getCanonicalName());
 	}
@@ -66,15 +67,6 @@ public class WebServicePDF extends GeospatialPDF {
 
 			// PREPARE TO DRAW DIRECTLY TO THE PDF
 			PdfContentByte contByte = getWriter().getDirectContent();
-
-			// TODO : DA DIE DPI ZAHL NICHT DER DES EIGENTLICHEN KARTENBILDES
-			// ENTSPRICHT MUSS DIESES KLEINE KARTENBILD MIT EINER ANDEREN
-			// METHODE SKALIERT WERDEN, UM GENAU SO GROSS ZU WERDEN WIE DIE
-			// SEITE...
-
-			ReferencedLayer refLayer = new ReferencedLayer(this.getMasterBbox(), this.getPageWidth(),
-					this.getPageHeight());
-			this.getLayers().add(0, refLayer);
 
 			// THE STRUCTURE TREE ROOT
 			PdfStructureTreeRoot tree = this.getWriter().getStructureTreeRoot();
@@ -161,30 +153,46 @@ public class WebServicePDF extends GeospatialPDF {
 					double angle = 0.0;
 					double factor = 1.0;
 
+					// SET THE CONTENT BYTE FOR THE ACTUAL LAYER
 					((WfsLayer) this.getLayers().get(a)).getCollection().getDrawer().setContByte(contByte);
+					// SET THE TOP STRUCTURE ELEMENT FOR THE ACTUAL LAYER
 					((WfsLayer) this.getLayers().get(a)).getCollection().getDrawer().setTop(top);
+					// SET THE ANGLE TO TURN THE DATA ABOUT
 					((WfsLayer) this.getLayers().get(a)).setAngle(angle);
+					// SET THE FACTOR TO SCALE WITH
 					((WfsLayer) this.getLayers().get(a)).setFactor(factor);
 
+					// POLYGONS
+					// BEGIN POLYGON LAYER
 					contByte.beginLayer(
 							new PdfLayer("Polygons: " + ((WfsLayer) this.getLayers().get(a)).getLink(), getWriter()));
 
+					// DRAW THE POLYGONS
 					((WfsLayer) this.getLayers().get(a)).drawPolygons(contByte);
 
+					// END THE POLYGON LAYER
 					contByte.endLayer();
 
+					// LINESTRINGS
+					// BEGIN THE LINESTRING LAYER
 					contByte.beginLayer(
 							new PdfLayer("Polylines " + ((WfsLayer) this.getLayers().get(a)).getLink(), getWriter()));
 
+					// DRAW THE LINESTRINGS
 					((WfsLayer) this.getLayers().get(a)).drawLinestrings(contByte);
 
+					// END THE LINESTRING LAYER
 					contByte.endLayer();
 
+					// POINTS
+					// BEGIN THE POINT LAYER
 					contByte.beginLayer(
 							new PdfLayer("Point2Ds " + ((WfsLayer) this.getLayers().get(a)).getLink(), getWriter()));
 
+					// DRAW THE POINTS
 					((WfsLayer) this.getLayers().get(a)).drawPoints(contByte);
 
+					// END THE POINT LAYER
 					contByte.endLayer();
 
 				}
@@ -231,107 +239,6 @@ public class WebServicePDF extends GeospatialPDF {
 
 		// img.scaleToFit(this.getPageWidth() * 72, this.getPageHeight() * 72);
 		LOG.info("SCALED THE IMAGE OF THE LAYER TO WIDTH = " + img.getWidth() + ", HEIGHT = " + img.getHeight());
-	}
-
-	/**
-	 * TODO
-	 *
-	 * @param img
-	 */
-	private void scaleReferencedImage(Image img) {
-		// CALCULATE THE PAGE SIZE TO FIT THE IMAGE TO
-		float pageDotsWidth = this.getPageWidth() * 72;
-		float pageDotsHeight = this.getPageHeight() * 72;
-
-		// TODO : BILD AN DIE SEITENGROESSE ANPASSEN
-
-		// MASTER BOUNDINGBOX HOCHKANT
-		if (this.getMasterBbox().getWidthGeo() < this.getMasterBbox().getHeightGeo()) {
-			// SEITE HOCHKANT
-			if (this.getPageWidth() < this.getPageHeight()) {
-				// CALCUALTE THE FACTOR
-				float factor = pageDotsWidth / img.getPlainWidth();
-				// SCALE THE IMAGE
-				img.scaleAbsolute(img.getPlainWidth() * factor, img.getPlainHeight() * factor);
-				// IMAGE STILL NOT HEIGHER AS THE PAGE
-				if (img.getPlainHeight() < pageDotsHeight) {
-					// OKAY
-				}
-				// ELSE THE IMAGE IS HIGHER THAN THE PAGE
-				else {
-					// CALCUALTE THE FACTOR
-					factor = pageDotsHeight / img.getPlainHeight();
-					// SCALE THE IMAGE
-					img.scaleAbsolute(img.getPlainWidth() * factor, img.getPlainHeight() * factor);
-				}
-			}
-			// SEITE QUER
-			else if (this.getPageWidth() > this.getPageHeight()) {
-				// CALCUALTE THE FACTOR
-				float factor = pageDotsHeight / img.getPlainHeight();
-				// SCALE THE IMAGE
-				img.scaleAbsolute(img.getPlainWidth() * factor, img.getHeight() * factor);
-				// IMAGE STILL NOT AS LARGE AS THE PAGE
-				if (img.getPlainWidth() < pageDotsWidth) {
-					// OKAY
-				}
-				// ELSE THE IMAGE IS LARGER THANT THE PAGE
-				else {
-					factor = pageDotsWidth / img.getPlainWidth();
-					// SCALE THE IMAGE
-					img.scaleAbsolute(img.getPlainWidth() * factor, img.getPlainHeight() * factor);
-				}
-			}
-		}
-		// MASTER BOUNDINGBOX QUER
-		else if (this.getMasterBbox().getWidthGeo() > this.getMasterBbox().getHeightGeo()) {
-			// SEITE HOCHKANT
-			if (this.getPageWidth() < this.getPageHeight()) {
-				// CALCUALTE THE FACTOR
-				float factor = pageDotsWidth / img.getPlainWidth();
-				// SCALE THE IMAGE
-				img.scaleAbsolute(img.getPlainWidth() * factor, img.getPlainHeight() * factor);
-				// IMAGE STILL NOT HEIGHER AS THE PAGE
-				if (img.getPlainHeight() < pageDotsHeight) {
-					// OKAY
-				}
-				// ELSE THE IMAGE IS HIGHER THAN THE PAGE
-				else {
-					// CALCUALTE THE FACTOR
-					factor = pageDotsHeight / img.getPlainHeight();
-					// SCALE THE IMAGE
-					img.scaleAbsolute(img.getPlainWidth() * factor, img.getPlainHeight() * factor);
-				}
-			}
-			// SEITE QUER
-			else if (this.getPageWidth() > this.getPageHeight()) {
-				// CALCUALTE THE FACTOR
-				float factor = pageDotsHeight / img.getPlainHeight();
-				// SCALE THE IMAGE
-				img.scaleAbsolute(img.getPlainWidth() * factor, img.getPlainHeight() * factor);
-				// IMAGE STILL NOT AS LARGE AS THE PAGE
-				if (img.getPlainWidth() < pageDotsWidth) {
-					// OKAY
-				}
-				// ELSE THE IMAGE IS LARGER THANT THE PAGE
-				else {
-					factor = pageDotsWidth / img.getPlainWidth();
-					// SCALE THE IMAGE
-					img.scaleAbsolute(img.getWidth() * factor, img.getHeight() * factor);
-				}
-			}
-		}
-		// MASTER BOUNDINGBOX QUADRATISCH
-		else if (this.getMasterBbox().getWidthGeo() == this.getMasterBbox().getHeightGeo()) {
-			// SEITE HOCHKANT
-			if (this.getPageWidth() < this.getPageHeight()) {
-
-			}
-			// SEITE QUER
-			else if (this.getPageWidth() > this.getPageHeight()) {
-
-			}
-		}
 	}
 
 	// METHODS

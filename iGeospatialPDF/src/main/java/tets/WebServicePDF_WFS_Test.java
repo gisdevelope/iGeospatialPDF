@@ -1,5 +1,6 @@
 package tets;
 
+import java.awt.Color;
 import java.util.ArrayList;
 
 import coordinateSystems.EPSG25832;
@@ -9,6 +10,7 @@ import geo.Point2D;
 import iText.WebServicePDF;
 import mapContent.layers.WfsLayer;
 import resources.PdfPageSize;
+import resources.PointAppearance;
 import resources.ServerVersion;
 
 /**
@@ -22,15 +24,18 @@ public class WebServicePDF_WFS_Test {
 
 	public static void main(String[] args) {
 		// TODO : BOUNDINGBOX HIER UEBERGEBEN
-		WebServicePDF pdf = new WebServicePDF(PdfPageSize.DinA0);
-
 		EPSG25832 epsg = new EPSG25832();
+		BoundingBox bbox = new BoundingBox(new Point2D(5712125, 374676, epsg),
+				new Point2D(5712125 + 800, 374676 + 500, epsg), epsg);
+		
+		WebServicePDF pdf = new WebServicePDF(PdfPageSize.DinA0, bbox);
+
+		
 		
 		String link = "http://www.wms.nrw.de/wms/strassen_nrw_wfs?";
 
-		BoundingBox bbox = new BoundingBox(new Point2D(5712125, 374676, epsg),
-				new Point2D(5712125 + 800, 374676 + 500, epsg), epsg);
-		pdf.setMasterBbox(bbox);
+		
+//		pdf.setMasterBbox(bbox);
 
 		ArrayList<String> layers = new ArrayList<>();
 		layers.add("strassen_nrw_strassen_nrw_opendata:Bauwerke");
@@ -39,7 +44,7 @@ public class WebServicePDF_WFS_Test {
 		maxFeatures.add(1000);
 		
 		WebServiceStyle style = new WebServiceStyle();
-		style.setPointRadius(300);
+		style.setPointAppearance(200, null, true, 20, Color.CYAN, Color.RED, PointAppearance.X);
 
 		WfsLayer layer1 = new WfsLayer(link, bbox, ServerVersion.WFS_V_1_0_0, layers, maxFeatures, style);
 
