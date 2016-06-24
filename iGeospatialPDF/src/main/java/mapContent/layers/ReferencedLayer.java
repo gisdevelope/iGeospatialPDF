@@ -9,11 +9,14 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import geo.BoundingBox;
+import iText.GeospatialPDF;
 import resources.Tile;
 import resources.TileArray;
 
 /**
- * Class to TODO
+ * Child class of {@link MapLayer}. This class will contain an
+ * {@link BufferedImage}, used as background for each {@link GeospatialPDF},
+ * which is geo-referenced.
  * 
  * @author DaGri
  * @since 12.06.2016
@@ -47,39 +50,23 @@ public class ReferencedLayer extends MapLayer {
 	// CONSTRUCTORS
 
 	/**
-	 * Constructor for TODO
+	 * Constructor for a {@link ReferencedLayer} using a {@link BoundingBox},
+	 * the size of the page in height and width as {@link Float}.
 	 * 
 	 * @param masterBbox
+	 *            the master {@link BoundingBox}
 	 * @param pageWidth
+	 *            the width of the PDF page
 	 * @param pageHeight
+	 *            the height of the PDF page
 	 */
 	public ReferencedLayer(BoundingBox masterBbox, float pageWidth, float pageHeight) {
 		super(masterBbox);
-		// TODO Auto-generated constructor stub
-		
-		// BILD ERSTELLEN, DAS DEM VERHAELTNIS DER BOUNDINGBOX ENTSPRICHT
-		this.setImageWidth((int)masterBbox.getWidthGeo());
-		this.setImageHeight((int)masterBbox.getHeightGeo());
 
-		// if (this.getBbox().getWidthGeo() >= this.getBbox().getHeightGeo()) {
-		// // SET THE DESIRED WIDTH OF THE IMAGE
-		// this.setImageWidth((int) (pageWidth * dpi));
-		// // SET THE DESIRED HEIGHT BY THE RELATION OF THE BOUNDGINGBOX WIDTH
-		// // AND HEIGHT
-		// double relation = this.getBbox().getHeightGeo() /
-		// this.getBbox().getWidthGeo();
-		// this.setImageHeight((int) (this.getImageWidth() * relation));
-		// } else
-		// // ELSE THE BOUNDINGBOX HEIGHT IS LARGER THAN THE WIDTH
-		// {
-		// // SET THE DESIRED HEIGHT OF THE IMAGE
-		// this.setImageHeight((int) (pageHeight * dpi));
-		// // SET THE DESIRED HEIGHT BY THE RELATION OF THE BOUNDGINGBOX WIDTH
-		// // AND HEIGHT
-		// double relation = this.getBbox().getWidthGeo() /
-		// this.getBbox().getHeightGeo();
-		// this.setImageWidth((int) (this.getImageHeight() * relation));
-		// }
+		// CREATE THE IMAGE WITH A PAGE FITTING WIDTH AND HEIGHT THAT WILL BE
+		// REFERENCED IN THE RECEIVE
+		this.setImageWidth((int) masterBbox.getWidthGeo());
+		this.setImageHeight((int) masterBbox.getHeightGeo());
 	}
 
 	/*
@@ -103,7 +90,6 @@ public class ReferencedLayer extends MapLayer {
 	@Override
 	public void prepareData(double northingRed, double eastingRed, double angle, double factor) {
 		// TODO Auto-generated method stub
-
 	}
 
 	// METHODS
@@ -126,6 +112,7 @@ public class ReferencedLayer extends MapLayer {
 
 		// SET THE PAINT COLOR
 		// graphics.setPaint(new Color(255F / 2, 255F, 185F, 185F));
+		// TODO : HINTERHER DIE FARBE ANPASSEN
 		graphics.setPaint(Color.PINK);
 
 		// DRAW A RECTANGLE OVER THE FULL IMAGE SIZE
@@ -161,16 +148,16 @@ public class ReferencedLayer extends MapLayer {
 	// GETTERS AND SETTERS
 
 	/**
-	 * Returns the TODO
+	 * Returns the map image as {@link BufferedImage}.
 	 *
-	 * @return the mapImage
+	 * @return the mapImage as {@link BufferedImage}
 	 */
 	public BufferedImage getMapImage() {
 		return mapImage;
 	}
 
 	/**
-	 * Sets the TODO
+	 * Sets the map image.
 	 *
 	 * @param mapImage
 	 *            the mapImage to set
@@ -180,16 +167,16 @@ public class ReferencedLayer extends MapLayer {
 	}
 
 	/**
-	 * Returns the TODO
+	 * Returns the DPI value as {@link Integer}
 	 *
-	 * @return the dpi
+	 * @return the dpi as {@link Integer}
 	 */
 	public int getDpi() {
 		return dpi;
 	}
 
 	/**
-	 * Sets the TODO
+	 * Sets the DPI value.
 	 *
 	 * @param dpi
 	 *            the dpi to set
@@ -199,16 +186,16 @@ public class ReferencedLayer extends MapLayer {
 	}
 
 	/**
-	 * Returns the TODO
+	 * Returns the image width as {@link Integer}.
 	 *
-	 * @return the imageWidth
+	 * @return the imageWidth as {@link Integer}
 	 */
 	public int getImageWidth() {
 		return imageWidth;
 	}
 
 	/**
-	 * Sets the TODO
+	 * Sets the image width.
 	 *
 	 * @param imageWidth
 	 *            the imageWidth to set
@@ -218,16 +205,16 @@ public class ReferencedLayer extends MapLayer {
 	}
 
 	/**
-	 * Returns the TODO
+	 * Returns the image height as {@link Integer}.
 	 *
-	 * @return the imageHeight
+	 * @return the imageHeight as {@link Integer}
 	 */
 	public int getImageHeight() {
 		return imageHeight;
 	}
 
 	/**
-	 * Sets the TODO
+	 * Sets the image height.
 	 *
 	 * @param imageHeight
 	 *            the imageHeight to set

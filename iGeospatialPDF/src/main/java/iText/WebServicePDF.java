@@ -74,9 +74,6 @@ public class WebServicePDF extends GeospatialPDF {
 			// EXTRACT THE STRUCTURE ELEMENT TOP
 			PdfStructureElement top = new PdfStructureElement(tree, new PdfName("WFS-Data"));
 
-			// TODO : WMS LAYER IN DEN HINTERGRUND EINFUEGEN, DER DIE
-			// GEOREFFERENZIERUNG ENTHAELT
-
 			for (int a = 0; a < this.getLayers().size(); a++) {
 
 				// RECEIVE THE DATA FOR THE LAYER, WHATEVER LAYER IT IS
@@ -130,10 +127,6 @@ public class WebServicePDF extends GeospatialPDF {
 
 					// SCALE THE IMAGE
 					this.scaleImage(img);
-
-					// ADD THE GEOREFFERECING INFORMATION TO THE IMAGE
-					// this.addGeoreferencing(img, ((WmsLayer)
-					// (this.getLayers().get(a))).getBbox());
 
 					// ADD THE IMAGE TO THE PAGE
 					contByte.addImage(img);

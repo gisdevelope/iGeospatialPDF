@@ -31,9 +31,9 @@ public class Point2D extends Geometry {
 	 * The {@link CoordinateSystem} used by this {@link Point2D}.
 	 */
 	private CoordinateSystem coordSystem;
-	
+
 	/**
-	 * TODO
+	 * The Logger to log events.
 	 */
 	Logger LOG = Logger.getLogger(this.getClass().getCanonicalName());
 
