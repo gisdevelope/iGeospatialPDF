@@ -115,6 +115,15 @@ public class DrawLineString extends DrawElement {
 		}
 	}
 
+	/**
+	 * Removes all {@link PdfCoordinate}s from the internal {@link ArrayList}.
+	 */
+	public void empty() {
+		while (this.getPdfCoords().isEmpty() == false) {
+			this.getPdfCoords().remove(0);
+		}
+	}
+
 	// GETTERS AND SETTERS
 
 	/**

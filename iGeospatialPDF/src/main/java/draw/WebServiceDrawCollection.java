@@ -10,7 +10,9 @@ import draw.geo.DrawPoint;
 import draw.geo.DrawPolygon;
 import draw.style.Style;
 import draw.style.WebServiceStyle;
+import geo.LineString;
 import iText.WebServicePDF;
+import resources.PdfCoordinateCalculator;
 
 /**
  * Class to extend the {@link DrawCollection} with methods to contain the needed
@@ -84,28 +86,27 @@ public class WebServiceDrawCollection extends DrawCollection {
 		for (int a = 0; a < this.getPolygons().size(); a++) {
 			this.getPolygons().get(a).reduce(northingRed, eastingRed);
 		}
-		
+
 		// REDUCE THE LINESTRINGS
 		for (int a = 0; a < this.getLinestrings().size(); a++) {
 			this.getLinestrings().get(a).reduce(northingRed, eastingRed);
 		}
-		
+
 		// REDUCE THE POINTS
 		for (int a = 0; a < this.getPoints().size(); a++) {
 			this.getPoints().get(a).reduce(northingRed, eastingRed);
 		}
-	
 
 		// TURN THE POLYGONS
 		for (int a = 0; a < this.getPolygons().size(); a++) {
 			this.getPolygons().get(a).turn(angle);
 		}
-		
+
 		// TURN THE LINESTRINGS
 		for (int a = 0; a < this.getLinestrings().size(); a++) {
 			this.getLinestrings().get(a).turn(angle);
 		}
-		
+
 		// TURN THE POINTS
 		for (int a = 0; a < this.getPoints().size(); a++) {
 			this.getPoints().get(a).turn(angle);
@@ -123,7 +124,6 @@ public class WebServiceDrawCollection extends DrawCollection {
 		for (int a = 0; a < this.getPoints().size(); a++) {
 			this.getPoints().get(a).scale(factor);
 		}
-		
 	}
 
 	/*
@@ -133,18 +133,79 @@ public class WebServiceDrawCollection extends DrawCollection {
 	 */
 	@Override
 	public boolean addDrawElement(DrawElement de) {
+		// IF THE DRAW ELEMENT IS A DRAWPOINT
 		if (de.getClass().equals(DrawPoint.class)) {
+			// ADD IT TO THE DRAW POINTS
 			this.getPoints().add((DrawPoint) de);
+			// RETURN TRUE
 			return true;
-		} else if (de.getClass().equals(DrawLineString.class)) {
+		}
+		// ELSE IF IT IS A DRAWLINESTRING
+		else if (de.getClass().equals(DrawLineString.class)) {
+			// ADD IT TO THE DRAWLINESTRINGS
 			this.getLinestrings().add((DrawLineString) de);
+			// RETURN TRUE
 			return true;
-		} else if (de.getClass().equals(DrawPolygon.class)) {
+		}
+		// ELSE IF IT IS A DRAWPOLYGON
+		else if (de.getClass().equals(DrawPolygon.class)) {
+			// ADD IT TO THE DRAWPOLYGON
 			this.getPolygons().add((DrawPolygon) de);
+			// RETURN TRUE
 			return true;
-		} else
+		}
+		// ELSE THROW A WARNING
+		else
 			LOG.warning("ELEMENT TO ADD CAN NOT BE ADDED TO THIS WEB SERVICE DRAW COLLECTION");
+		// AND RETURN FALSE
 		return false;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see draw.DrawCollection#sortOutFeatures(geo.BoundingBox)
+	 */
+	@Override
+	public void sortOutFeatures(float width, float height) {
+		// TODO : METHODEN WURDEN AUSGELAGERT IN DIE KLASSE
+		// PDFCOORDINATECALCULATOR
+		PdfCoordinateCalculator calc1 = PdfCoordinateCalculator.getInstance();
+		// SORT OUT THE DRAWPOINTS OUTSIDE OF THE BOUNDINGBOX
+		for (int a = 0; a < this.getPoints().size(); a++) {
+			if (calc1.pdfCoordinateInArea(this.getPoints().get(a).getPdfCoord(), width, height) == false) {
+				// REMOVE THE DRAWPOINT
+				this.getPoints().remove(a);
+				// COUNT DOWN ONE TIME DUE TO THE REMOVING OF THE DRAW POINT
+				a--;
+			}
+		}
+
+		// TODO TESTEN
+		for (int a = 0; a < this.getLinestrings().size(); a++) {
+			// TODO : VERALTET
+			// this.getLinestrings().get(a).setPdfCoords(
+			// calc1.calcFittingArrayList(this.getLinestrings().get(a).getPdfCoords(),
+			// width, height));
+			// TODO : NEU
+			DrawLineString ls = this.getLinestrings().remove(a);
+			ArrayList<DrawLineString> strings = calc1.calcFittingDrawLinestrings(ls, width, height);
+
+			for (int b = 0; b < strings.size(); b++) {
+				// REIMPLANT THE (SPLITTED) LINESTRINGS
+				this.getLinestrings().add(a, strings.get(b));
+				a++;
+			}
+
+		}
+		// TODO DRAW POLYGONS ABSCHNEIDEN WENN SIE AUSSERHALB DER BOUNDINGBOX
+		// LIEGEN
+		for (int a = 0; a < this.getLinestrings().size(); a++) {
+			// TODO : OB DAS KLAPPT?!
+			this.getPolygons().get(a)
+					.setPdfCoords(calc1.calcFittingArrayList(this.getPolygons().get(a).getPdfCoords(), width, height));
+		}
+		// TODO DIE ABSCHNEIDE-METHODEN AUSLAGERN IN EIGENE METHODEN
 	}
 
 	// OVERWRITTEN GETTERS AND SETTERS

@@ -51,6 +51,13 @@ public abstract class DrawCollection {
 	 *            the easting to reduce about
 	 */
 	public abstract void prepareData(double northingRed, double eastingRed, double angle, double factor);
+	
+	/**
+	 * TODO
+	 *
+	 * @param masterBbox
+	 */
+	public abstract void sortOutFeatures(float width, float height);
 
 	/**
 	 * Abstract method that shall add a {@link DrawElement} de to the internal
