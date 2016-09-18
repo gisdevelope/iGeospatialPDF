@@ -1,4 +1,4 @@
-package tets;
+package tests;
 
 import coordinateSystems.EPSG25832;
 import geo.BoundingBox;

@@ -1,4 +1,4 @@
-package tets;
+package tests;
 
 import java.util.ArrayList;
 

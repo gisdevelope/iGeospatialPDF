@@ -1,4 +1,4 @@
-package tets;
+package tests;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -30,11 +30,8 @@ public class WebServicePDF_WFS_Test {
 		
 		WebServicePDF pdf = new WebServicePDF(PdfPageSize.DinA0, bbox);
 
-		
-		
 		String link = "http://www.wms.nrw.de/wms/strassen_nrw_wfs?";
 
-		
 //		pdf.setMasterBbox(bbox);
 
 		ArrayList<String> layers = new ArrayList<>();
